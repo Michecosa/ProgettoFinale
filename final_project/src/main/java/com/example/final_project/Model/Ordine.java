@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 public class Ordine extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "id_utente")
+	@JsonIgnore
 	private Utente utente;
 
 	private boolean pagato;

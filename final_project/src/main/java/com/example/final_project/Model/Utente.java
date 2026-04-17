@@ -3,6 +3,7 @@ package com.example.final_project.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +26,7 @@ public class Utente extends BaseEntity {
 	private String username;
 	@Column(unique = true)
 	private String mail;
+	@JsonIgnore
 	private String password;
 	private String roles;// csv "ROLE_ADMIN,ROLE_USER"
 
