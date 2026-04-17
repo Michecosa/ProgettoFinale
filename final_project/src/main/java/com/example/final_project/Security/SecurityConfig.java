@@ -54,8 +54,9 @@ public class SecurityConfig {
 						auth -> auth
 								// URI CRITERIO DI ACCETTAZIONE
 								.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-								.requestMatchers("/api/auth/login").permitAll()
-								.requestMatchers("/api/auth/register").permitAll()
+								.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+								.requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+								.requestMatchers("/error").permitAll()
 								.requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
 								.requestMatchers(HttpMethod.GET, "/api/products").permitAll()
 								.requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()

@@ -31,7 +31,15 @@ public class Utente extends BaseEntity {
     /** Sostituisce il vecchio campo String roles (CSV). */
     @OneToMany(mappedBy = "utente", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @com.fasterxml.jackson.annotation.JsonIgnore
+    @Setter(AccessLevel.NONE)
     private List<Ruolo> ruoli = new ArrayList<>();
+
+    public List<Ruolo> getRuoli() {
+        if (ruoli == null) {
+            ruoli = new ArrayList<>();
+        }
+        return ruoli;
+    }
 
     @OneToOne(mappedBy = "utente")
     @com.fasterxml.jackson.annotation.JsonIgnore
@@ -39,10 +47,18 @@ public class Utente extends BaseEntity {
 
     @OneToMany(mappedBy = "utente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @com.fasterxml.jackson.annotation.JsonIgnore
+    @Setter(AccessLevel.NONE)
     private List<Ordine> ordini = new ArrayList<>();
+
+    public List<Ordine> getOrdini() {
+        if (ordini == null) {
+            ordini = new ArrayList<>();
+        }
+        return ordini;
+    }
 
     /** Utility: verifica se l'utente ha un determinato ruolo. */
     public boolean hasRuolo(String nomeRuolo) {
-        return ruoli.stream().anyMatch(r -> r.getNome().equals(nomeRuolo));
+        return getRuoli().stream().anyMatch(r -> r.getNome().equals(nomeRuolo));
     }
 }
