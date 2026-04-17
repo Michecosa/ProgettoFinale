@@ -17,6 +17,7 @@ import com.example.final_project.Exception.UtenteNonEsistenteException;
 import com.example.final_project.Model.Utente;
 import com.example.final_project.Repository.UtenteRepository;
 
+// Service per la gestione degli utenti, contiene la logica di business per creare, aggiornare, visualizzare e eliminare gli utenti, implementa UserDetailsService per l'integrazione con Spring Security
 @Service
 public class UtenteService implements UserDetailsService {
 
@@ -27,7 +28,10 @@ public class UtenteService implements UserDetailsService {
     @org.springframework.context.annotation.Lazy
     private PasswordEncoder passwordEncoder;
 
-    // Richiesto da Spring Security per autenticare l'utente tramite JWT
+    // Implementazione del metodo loadUserByUsername per caricare i dettagli
+    // dell'utente durante l'autenticazione, se l'utente non esiste lancia
+    // un'eccezione, altrimenti restituisce un oggetto User con username, password e
+    // ruoli dell'utente
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Utente utente = utenteRepository.findByUsername(username);
@@ -43,10 +47,13 @@ public class UtenteService implements UserDetailsService {
         return new User(utente.getUsername(), utente.getPassword(), authorities);
     }
 
+    // Restituisce la lista di tutti gli utenti presenti nel database, utilizzato
     public List<Utente> trovaTutti() {
         return utenteRepository.findAll();
     }
 
+    // Restituisce un utente specifico tramite il suo username, se non trovato
+    // lancia
     public Utente trovaPerUsername(String username) {
         Utente utente = utenteRepository.findByUsername(username);
         if (utente == null) {
@@ -55,11 +62,15 @@ public class UtenteService implements UserDetailsService {
         return utente;
     }
 
+    // Restituisce un utente specifico tramite il suo ID, se non trovato lancia
+    // un'eccezione, utilizzato principalmente per operazioni di aggiornamento o
+    // eliminazione
     public Utente trovaPerID(Long id) {
         return utenteRepository.findById(id)
                 .orElseThrow(() -> new UtenteNonEsistenteException("Nessun utente con id: " + id));
     }
 
+    // Crea un nuovo utente, verificando che username, mail e password non siano
     public Utente crea(Utente utente) {
         if (utente.getUsername() == null || utente.getUsername().isBlank()
                 || utente.getMail() == null || utente.getMail().isBlank()
@@ -76,6 +87,8 @@ public class UtenteService implements UserDetailsService {
         return utenteRepository.save(utente);
     }
 
+    // Aggiorna un utente esistente tramite il suo ID, se non trovato lancia
+    // un'eccezione, restituisce l'utente aggiornato
     public Utente aggiorna(Long id, Utente datiAggiornati) {
         Utente esistente = trovaPerID(id);
         if (datiAggiornati.getMail() != null && !datiAggiornati.getMail().isBlank()) {
@@ -87,6 +100,7 @@ public class UtenteService implements UserDetailsService {
         return utenteRepository.save(esistente);
     }
 
+    // Elimina un utente tramite il suo ID, se non trovato lancia un'eccezione
     public void elimina(Long id) {
         if (!utenteRepository.existsById(id)) {
             throw new UtenteNonEsistenteException("Nessun utente con id: " + id);

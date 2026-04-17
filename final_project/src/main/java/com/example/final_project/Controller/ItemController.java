@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.final_project.Model.ItemQuantity;
 import com.example.final_project.Service.ItemService;
 
+// Controller per la gestione degli item, con endpoint per operazioni CRUD e aggiornamento quantità
 @RestController
 @RequestMapping("/items")
 public class ItemController {
 
+    // Iniettiamo il servizio per la gestione degli item
     @Autowired
     ItemService itemService;
 

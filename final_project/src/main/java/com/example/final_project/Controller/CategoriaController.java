@@ -16,6 +16,7 @@ import com.example.final_project.Service.CategoriaService;
 
 import lombok.RequiredArgsConstructor;
 
+// Controller per la gestione delle categorie, con endpoint per operazioni CRUD
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
@@ -23,26 +24,31 @@ public class CategoriaController {
 
     private final CategoriaService categoriaService;
 
+    // Endpoint per ottenere tutte le categorie
     @GetMapping
     public List<Categoria> getAll() {
         return categoriaService.trovaTutte();
     }
 
+    // Endpoint per ottenere una categoria specifica tramite ID
     @GetMapping("/{id}")
     public Categoria getById(@PathVariable Long id) {
         return categoriaService.trovaPerID(id);
     }
 
+    // Endpoint per creare una nuova categoria
     @PostMapping
     public Categoria create(@RequestBody Categoria categoria) {
         return categoriaService.crea(categoria);
     }
 
+    // Endpoint per aggiornare una categoria esistente tramite ID
     @PutMapping("/{id}")
     public Categoria update(@PathVariable Long id, @RequestBody Categoria categoria) {
         return categoriaService.aggiorna(id, categoria);
     }
 
+    // Endpoint per eliminare una categoria tramite ID
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         categoriaService.elimina(id);

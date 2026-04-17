@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 
+// Classe base per tutte le entità del progetto, con un ID generato automaticamente
 @Data
 @MappedSuperclass
 public class BaseEntity {

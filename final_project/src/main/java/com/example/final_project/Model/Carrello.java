@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+// Entità che rappresenta il carrello di un utente
 @Entity
 @Data
 @AllArgsConstructor
@@ -18,6 +19,8 @@ public class Carrello extends BaseEntity {
 	@JoinColumn(name = "id_utente")
 	private Utente utente;
 
+	// Relazione OneToMany con ItemQuantity, con cascade per propagare le operazioni
+	// e fetch EAGER per caricare gli item insieme al carrello
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "carrello")
 	private List<ItemQuantity> items = new ArrayList<>();
 
@@ -25,20 +28,15 @@ public class Carrello extends BaseEntity {
 		return items.stream().mapToDouble(i -> i.getQtn() * i.getProdotto().getPrezzo()).sum();
 	}
 
-	/**
-	 * Restituisce un Item se è già presente il prodotto, null se non è presente
-	 * 
-	 * @return
-	 */
+	// Metodo per verificare se un prodotto è già presente nel carrello e restituire
+	// l'item corrispondente
 	public ItemQuantity productAlreadyPresent(Prodotto p) {
-		// scorro gli item e restituisco quello con prodotto uguale al parametro
+
 		for (ItemQuantity i : items)
 			if (i.getProdotto().equals(p))
 				return i;
-		// se non esiste da null
+
 		return null;
 
-		// return
-		// items.stream().filter(i->i.getProdotto().equals(p)).findFirst().orElse(null);
 	}
 }
