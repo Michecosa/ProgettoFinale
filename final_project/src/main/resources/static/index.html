@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Project Shop - Accesso</title>
+    <title>FinalShop | Premium E-Commerce</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts: Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Animate.css -->
@@ -18,161 +18,237 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg sticky-top d-none" id="main-nav">
+    <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <div class="brand-logo-small me-2">
-                    <i class="fas fa-shopping-bag"></i>
-                </div>
+            <a class="navbar-brand d-flex align-items-center" href="#" onclick="showHome()">
+                <i class="fas fa-bolt brand-icon"></i>
                 <span>FinalShop</span>
             </a>
             
-            <div class="d-flex align-items-center">
-                <button class="btn btn-cart position-relative me-3" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="cart-badge">
-                        0
-                    </span>
-                </button>
-                <div class="dropdown">
-                    <button class="btn btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user-circle"></i> <span id="user-display-name">Utente</span>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showHome()">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showShop()">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Collezioni</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contatti</a></li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn-icon" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="cart-badge">0</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                        <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                    </ul>
+                    
+                    <div id="user-actions">
+                        <!-- Swapped by JS -->
+                        <button class="btn btn-outline-light rounded-pill px-4" onclick="showAuth('login')">Accedi</button>
+                    </div>
+
+                    <div id="profile-dropdown" class="dropdown d-none">
+                        <button class="btn-icon" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 bg-dark text-white">
+                            <li><a class="dropdown-item text-white" href="#"><i class="fas fa-user-circle me-2"></i> Profilo</a></li>
+                            <li><a class="dropdown-item text-white" href="#"><i class="fas fa-history me-2"></i> Ordini</a></li>
+                            <li><hr class="dropdown-divider bg-secondary"></li>
+                            <li><a class="dropdown-item text-white" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div id="toast-container"></div>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
 
-    <!-- Auth Section -->
-    <div id="auth-view" class="container-fluid">
-        <div class="auth-container animate__animated animate__zoomIn">
-            <div class="auth-card" id="auth-card">
-                <div class="brand-logo">
-                    <i class="fas fa-shopping-bag"></i>
-                </div>
-                
-                <div id="login-section">
-                    <h2>Bentornato!</h2>
-                    <p class="subtitle">Inserisci le tue credenziali per accedere</p>
-                    
-                    <form id="login-form">
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" id="login-username" placeholder="Inserisci username" required>
-                            </div>
+    <!-- Home View -->
+    <div id="home-view">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-bg-glow"></div>
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 hero-content fade-in-up">
+                        <h1 class="display-1">Scopri la <span class="text-gradient">Nuova Era</span> dello Shopping.</h1>
+                        <p class="lead text-muted mb-5">Esplora la nostra collezione esclusiva di prodotti tecnologici e lifestyle curati appositamente per te.</p>
+                        <div class="d-flex gap-3">
+                            <button class="btn btn-primary-custom px-5 py-3 w-auto" onclick="showShop()">Inizia lo Shopping</button>
+                            <button class="btn btn-outline-light rounded-pill px-5 py-3">Scopri di più</button>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input type="password" class="form-control" id="login-password" placeholder="••••••••" required>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center">
-                            Accedi <div class="loader" id="login-loader"></div>
-                        </button>
-                    </form>
-
-                    <div class="toggle-container">
-                        Non hai un account? <a href="#" class="btn-link" onclick="toggleAuth('register')">Registrati</a>
                     </div>
-                </div>
-
-                <div id="register-section" style="display: none;">
-                    <h2>Crea un account</h2>
-                    <p class="subtitle">Unisciti alla nostra community oggi stesso</p>
-                    
-                    <form id="register-form">
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" id="reg-username" placeholder="Scegli un username" required>
-                            </div>
+                    <div class="col-lg-6 mt-5 mt-lg-0 hero-img-container fade-in-up" style="animation-delay: 0.2s;">
+                        <div class="hero-img-card">
+                            <img src="img/hero-bg.png" alt="Hero Banner">
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input type="email" class="form-control" id="reg-email" placeholder="nome@esempio.it" required>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input type="password" class="form-control" id="reg-password" placeholder="Minimo 8 caratteri" required>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center">
-                            Registrati <div class="loader" id="reg-loader"></div>
-                        </button>
-                    </form>
-
-                    <div class="toggle-container">
-                        Hai già un account? <a href="#" class="btn-link" onclick="toggleAuth('login')">Accedi</a>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Category Section -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-12 text-center">
+                        <h2 class="display-6 fw-bold">Categorie in <span class="text-gradient">Evidenza</span></h2>
+                        <p class="text-muted">Esplora i nostri reparti più popolari</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="category-card" onclick="showShop()">
+                            <div class="category-icon"><i class="fas fa-laptop"></i></div>
+                            <h3>Elettronica</h3>
+                            <p class="text-muted">Gli ultimi gadget e dispositivi high-tech per la tua vita digitale.</p>
+                            <a href="#" class="text-gradient fw-bold text-decoration-none">Sfoglia <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="category-card" onclick="showShop()">
+                            <div class="category-icon"><i class="fas fa-tshirt"></i></div>
+                            <h3>Moda</h3>
+                            <p class="text-muted">Vesti con stile grazie alla nostra selezione di capi esclusivi e alla moda.</p>
+                            <a href="#" class="text-gradient fw-bold text-decoration-none">Sfoglia <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="category-card" onclick="showShop()">
+                            <div class="category-icon"><i class="fas fa-home"></i></div>
+                            <h3>Casa</h3>
+                            <p class="text-muted">Arreda i tuoi spazi con oggetti di design e domotica avanzata.</p>
+                            <a href="#" class="text-gradient fw-bold text-decoration-none">Sfoglia <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
-    <!-- Shop Section -->
-    <div id="shop-view" class="container py-5 d-none">
-        <div class="row mb-5 animate__animated animate__fadeInDown">
-            <div class="col-12 text-center text-white">
-                <h1 class="display-4 fw-bold mb-3">Catalogo Prodotti</h1>
-                <p class="lead opacity-75">Esplora la nostra selezione esclusiva e aggiungi i tuoi preferiti al carrello.</p>
+    <!-- Shop View -->
+    <div id="shop-view" class="container py-5 d-none" style="margin-top: 80px;">
+        <div class="row mb-5 align-items-center">
+            <div class="col-md-6">
+                <h2 class="display-5 fw-bold mb-0">Tutti i <span class="text-gradient">Prodotti</span></h2>
+                <p class="text-muted">Trovati <span id="product-count">0</span> articoli disponibili</p>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group-custom mb-0">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cerca un prodotto..." id="search-input">
+                </div>
             </div>
         </div>
         
         <div class="row g-4" id="products-grid">
-            <!-- Prodotti caricati dinamicamente -->
+            <!-- Dynamic Products -->
             <div class="col-12 text-center py-5">
-                <div class="spinner-border text-white" role="status">
+                <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Auth View -->
+    <div id="auth-view" class="container d-none" style="margin-top: 100px;">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div id="login-section">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold mb-2">Bentornato</h2>
+                        <p class="text-muted">Accedi al tuo account per continuare</p>
+                    </div>
+                    <form id="login-form">
+                        <label class="form-label ms-1">Username</label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="login-username" placeholder="Inserisci il tuo username" required>
+                        </div>
+                        <label class="form-label ms-1">Password</label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-primary-custom mt-3">
+                            <span id="login-text">Accedi</span>
+                            <span id="login-spinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                        </button>
+                    </form>
+                    <div class="text-center mt-4">
+                        <p class="text-muted mb-0">Non hai un account? <a href="#" class="text-primary fw-bold text-decoration-none" onclick="showAuth('register')">Registrati</a></p>
+                    </div>
+                </div>
+
+                <div id="register-section" class="d-none">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold mb-2">Crea Account</h2>
+                        <p class="text-muted">Inizia il tuo viaggio con FinalShop</p>
+                    </div>
+                    <form id="register-form">
+                        <label class="form-label ms-1">Username</label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="reg-username" placeholder="Scegli un username" required>
+                        </div>
+                        <label class="form-label ms-1">Email</label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="reg-email" placeholder="nome@esempio.it" required>
+                        </div>
+                        <label class="form-label ms-1">Password</label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="reg-password" placeholder="Scegli una password sicura" required>
+                        </div>
+                        <button type="submit" class="btn-primary-custom mt-3">
+                            <span id="reg-text">Registrati</span>
+                            <span id="reg-spinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                        </button>
+                    </form>
+                    <div class="text-center mt-4">
+                        <p class="text-muted mb-0">Hai già un account? <a href="#" class="text-primary fw-bold text-decoration-none" onclick="showAuth('login')">Accedi</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Cart Offcanvas -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
-        <div class="offcanvas-header bg-light">
-            <h5 class="offcanvas-title fw-bold" id="cartOffcanvasLabel">
-                <i class="fas fa-shopping-cart me-2 text-primary"></i> Il tuo Carrello
+    <div class="offcanvas offcanvas-end text-white" tabindex="-1" id="cartOffcanvas">
+        <div class="offcanvas-header bg-dark">
+            <h5 class="offcanvas-title fw-bold">
+                <i class="fas fa-shopping-bag me-2 text-primary"></i> Il tuo Carrello
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column">
-            <div id="cart-items-container" class="flex-grow-1 overflow-auto mb-4">
-                <!-- Items caricati dinamicamente -->
-                <p class="text-center text-muted mt-5">Il tuo carrello è vuoto.</p>
+            <div id="cart-items-container" class="flex-grow-1 overflow-auto pe-2">
+                <!-- Items -->
+                <div class="text-center py-5">
+                    <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
+                    <p class="text-muted">Il carrello è vuoto</p>
+                </div>
             </div>
             
-            <div class="cart-summary p-4 bg-light rounded-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="h6 mb-0">Totale</span>
-                    <span class="h5 fw-bold mb-0 text-primary" id="cart-total">€ 0.00</span>
+            <div class="cart-total-box mt-4">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Subtotale</span>
+                    <span id="cart-subtotal">€ 0.00</span>
                 </div>
-                <button class="btn btn-primary w-100 py-3 mb-2" id="checkout-btn" disabled>
-                    Procedi al Checkout
+                <div class="d-flex justify-content-between mb-4 h4">
+                    <span class="fw-bold">Totale</span>
+                    <span class="fw-bold text-primary" id="cart-total text-gradient">€ 0.00</span>
+                </div>
+                <button class="btn-primary-custom w-100 py-3 mb-2" id="checkout-btn" disabled>
+                    Procedi al Pagamento
                 </button>
-                <button class="btn btn-outline-danger btn-sm w-100" onclick="clearCart()">
-                    Svuota Carrello
-                </button>
+                <button class="btn btn-link text-muted w-100 text-decoration-none" onclick="clearCart()">Svuota carrello</button>
             </div>
         </div>
     </div>
@@ -180,7 +256,7 @@
     <!-- Bootstrap 5 Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom JavaScript -->
+    <!-- App Logic -->
     <script src="js/auth.js"></script>
 </body>
 </html>
