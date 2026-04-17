@@ -1,0 +1,41 @@
+services:
+  # STEP 1: IL DATABASE (MySQL)
+  db-security:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      # Allineato all'application.yml
+      MYSQL_DATABASE: security
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      # Verifica che il DB sia pronto prima di far partire Spring
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - security_net
+
+  # STEP 2: L'APPLICAZIONE (Spring Boot)
+  app-security:
+    build: .
+    container_name: spring_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      db-security:
+        condition: service_healthy
+    environment:
+      # --- OVERRIDE DELLE PROPERTIES ---
+      # Uso 'db-security' come hostname perché Docker li mette nella stessa rete
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-security:3306/security?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+    networks:
+      - security_net
+
+networks:
+  security_net:
+    driver: bridge
