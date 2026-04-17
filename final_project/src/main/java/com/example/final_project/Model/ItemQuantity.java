@@ -1,9 +1,21 @@
 package com.example.final_project.Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class ItemAmmazzon extends BaseEntity {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ItemQuantity extends BaseEntity {
+
 	private int qtn;
 
 	@ManyToOne(fetch = FetchType.EAGER)

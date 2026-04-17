@@ -6,15 +6,20 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Carrello extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "id_utente")
 	private Utente utente;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "carrello")
-	private List<ItemAmmazzon> items = new ArrayList<>();
+	private List<ItemQuantity> items = new ArrayList<>();
 
 	public double getTotale() {
 		return items.stream().mapToDouble(i -> i.getQtn() * i.getProdotto().getPrezzo()).sum();
@@ -25,9 +30,9 @@ public class Carrello extends BaseEntity {
 	 * 
 	 * @return
 	 */
-	public ItemAmmazzon productAlreadyPresent(Prodotto p) {
+	public ItemQuantity productAlreadyPresent(Prodotto p) {
 		// scorro gli item e restituisco quello con prodotto uguale al parametro
-		for (ItemAmmazzon i : items)
+		for (ItemQuantity i : items)
 			if (i.getProdotto().equals(p))
 				return i;
 		// se non esiste da null

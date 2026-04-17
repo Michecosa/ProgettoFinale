@@ -1,7 +1,23 @@
 package com.example.final_project.Model;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Ordine extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "id_utente")
@@ -12,7 +28,7 @@ public class Ordine extends BaseEntity {
 	private String indirizzo;
 
 	@OneToMany(mappedBy = "ordine", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<ItemAmmazzon> items = new ArrayList<>();
+	private List<ItemQuantity> items = new ArrayList<>();
 
 	public double getTotale() {
 		return items.stream().mapToDouble(i -> i.getQtn() * i.getProdotto().getPrezzo()).sum();

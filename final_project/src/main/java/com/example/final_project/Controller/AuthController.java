@@ -1,5 +1,22 @@
 package com.example.final_project.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.final_project.Model.Carrello;
+import com.example.final_project.Model.Utente;
+import com.example.final_project.Repository.CarrelloRepository;
+import com.example.final_project.Repository.UtenteRepository;
+import com.example.final_project.Security.JwtService;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
