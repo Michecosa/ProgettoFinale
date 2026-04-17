@@ -30,6 +30,5 @@ public class ItemQuantity extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_ordine")
-	@JsonIgnore
 	private Ordine ordine;
 }

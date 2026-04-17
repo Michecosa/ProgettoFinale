@@ -1,6 +1,5 @@
 package com.example.final_project.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +16,6 @@ import lombok.NoArgsConstructor;
 public class Carrello extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "id_utente")
-	@JsonIgnore
 	private Utente utente;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "carrello")
