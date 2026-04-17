@@ -3,30 +3,51 @@ package com.example.final_project.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.final_project.Model.Carrello;
+import com.example.final_project.Model.ItemQuantity;
+import com.example.final_project.Model.Prodotto;
+import com.example.final_project.Repository.CarrelloRepository;
+import com.example.final_project.Repository.ItemRepository;
+import com.example.final_project.Repository.ProdottoRepository;
 
 @RestController
 @RequestMapping("/api/carts")
 public class CarrelloController {
+
     @Autowired
-    private CarrelloService carrelloService;
+    private CarrelloRepository carrelloRepository;
+    @Autowired
+    private ProdottoRepository prodottoRepository;
+    @Autowired
+    private ItemRepository itemRepository;
 
     @GetMapping("/mine")
-    public CarrelloPageDto getMine(Authentication authentication) {
-        // Authentication viene in automatico riempito con l'utente a cui appartiene
-        // il JWT, ne prendiamo lo username
-        String username = authentication.getName();
-        return carrelloService.getMyCarrello(username);
+    public Carrello getMine(Authentication authentication) {
+        return carrelloRepository.findByUtente_Username(authentication.getName());
     }
 
-    @PostMapping("/add")
-    public CarrelloPageDto addProduct(@RequestBody AggiuntaDto dto, Authentication authentication) {
-        return carrelloService.aggiungiProdotto(authentication.getName(), dto.idProdotto());
-    }
+    @PostMapping("/add/{idProdotto}")
+    public Carrello addProduct(@PathVariable Long idProdotto, Authentication authentication) {
+        Carrello carrello = carrelloRepository.findByUtente_Username(authentication.getName());
+        Prodotto prodotto = prodottoRepository.findById(idProdotto).orElseThrow();
 
-    public record AggiuntaDto(Long idProdotto) {
+        ItemQuantity item = carrello.productAlreadyPresent(prodotto);
+        if (item != null) {
+            item.setQtn(item.getQtn() + 1);
+            itemRepository.save(item);
+        } else {
+            ItemQuantity newItem = new ItemQuantity();
+            newItem.setProdotto(prodotto);
+            newItem.setCarrello(carrello);
+            newItem.setQtn(1);
+            itemRepository.save(newItem);
+        }
+
+        return carrelloRepository.findByUtente_Username(authentication.getName());
     }
 }
