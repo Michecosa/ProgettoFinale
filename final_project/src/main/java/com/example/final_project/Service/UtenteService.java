@@ -24,6 +24,7 @@ public class UtenteService implements UserDetailsService {
     private UtenteRepository utenteRepository;
 
     @Autowired
+    @org.springframework.context.annotation.Lazy
     private PasswordEncoder passwordEncoder;
 
     // Richiesto da Spring Security per autenticare l'utente tramite JWT
