@@ -4,4 +4,7 @@ package com.example.final_project.Controller;
 @RequestMapping("/api/items")
 public class ItemController {
 
+    @Autowired
+    ItemService itemService;
+
 }
