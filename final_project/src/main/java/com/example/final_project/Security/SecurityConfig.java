@@ -14,14 +14,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
 	@Autowired
-	/** Filtro che valida il JWT e popola lo SecurityContext. */
-	private JwtAuthenticationFilter jwtFilter;
+	private JwtService jwtService;
+
+	@Autowired
+	private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+
+	@Bean
+	JwtAuthenticationFilter jwtFilter() {
+		return new JwtAuthenticationFilter(jwtService, userDetailsService);
+	}
 
 	/**
 	 * Definisce la catena di filtri usata da Spring Security.
@@ -34,12 +46,14 @@ public class SecurityConfig {
 			// come Bean
 	public SecurityFilterChain api(HttpSecurity http) throws Exception {
 		http
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.csrf(AbstractHttpConfigurer::disable)
 				.sessionManagement(
 						sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(
 						auth -> auth
 								// URI CRITERIO DI ACCETTAZIONE
+								.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 								.requestMatchers("/api/auth/login").permitAll()
 								.requestMatchers("/api/auth/register").permitAll()
 								.requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
@@ -55,9 +69,24 @@ public class SecurityConfig {
 								.requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
 								.requestMatchers("/api/users/**").hasRole("ADMIN")
 								.anyRequest().authenticated())
-				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+				.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
+	}
+
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(List.of(
+				"http://localhost:8080",
+				"http://127.0.0.1:8080",
+				"http://localhost:5500",
+				"http://127.0.0.1:5500"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedHeaders(List.of("*"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 
 	/** Espone l’AuthenticationManager per usarlo nei controller di login. */
