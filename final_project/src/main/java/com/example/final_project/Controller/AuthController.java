@@ -20,68 +20,38 @@ import com.example.final_project.Security.JwtService;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-	@Autowired
-	private JwtService jwtService;
-	@Autowired
-	private PasswordEncoder criptatore;
-	@Autowired
-	private UtenteRepository dao;
-	@Autowired
-	private CarrelloRepository cDao;
-	@Autowired
-	private AuthenticationManager authManager;
 
-	@PostMapping("/register")
-	public void register(@RequestBody RegistrationDto dto) {
-		Utente daCreare = new Utente();
-		daCreare.setUsername(dto.username());
-		daCreare.setPassword(criptatore.encode(dto.password));
-		daCreare.setMail(dto.mail());
-		daCreare.setRoles("ROLE_USER");
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private PasswordEncoder criptatore;
+    @Autowired
+    private UtenteRepository utenteRepository;
+    @Autowired
+    private CarrelloRepository carrelloRepository;
+    @Autowired
+    private AuthenticationManager authManager;
 
-		daCreare = dao.save(daCreare);
+    @PostMapping("/register")
+    public void register(@RequestBody Utente utente) {
+        utente.setPassword(criptatore.encode(utente.getPassword()));
+        utente.setRoles("ROLE_USER");
+        utente = utenteRepository.save(utente);
 
-		Carrello c = new Carrello();
-		c.setUtente(daCreare);
-		cDao.save(c);
-	}
+        Carrello c = new Carrello();
+        c.setUtente(utente);
+        carrelloRepository.save(c);
+    }
 
-	@PostMapping("/login")
-	public JwtResponseDto login(@RequestBody LoginDto dto) {
-		Authentication auth = authManager
-				.authenticate(new UsernamePasswordAuthenticationToken(dto.username(), dto.password()));
+    @PostMapping("/login")
+    public String login(@RequestBody Utente utente) {
+        Authentication auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(utente.getUsername(), utente.getPassword()));
+        return jwtService.generateToken(auth);
+    }
 
-		String tokenizzato = jwtService.generateToken(auth);
-
-		return new JwtResponseDto(tokenizzato);
-
-	}
-
-	@GetMapping("/test")
-	public String dammiNomeUtente(Authentication auth)// lui lo riempie in automatico con l'utente a cui appartiene il
-														// JWT
-	{
-		String nomeUtente = auth.getName();
-
-		return nomeUtente;
-	}
-
-	// Se un DTO è SEMPLICE e utilizzato in un solo Controller lo potete mettere
-	// direttamente nel controller stesso
-
-	public record LoginDto(
-			String username,
-			String password) {
-	}
-
-	public record RegistrationDto(
-			String username,
-			String mail,
-			String password) {
-	}
-
-	public record JwtResponseDto(
-			String token) {
-	}
-
+    @GetMapping("/test")
+    public String dammiNomeUtente(Authentication auth) {
+        return auth.getName();
+    }
 }

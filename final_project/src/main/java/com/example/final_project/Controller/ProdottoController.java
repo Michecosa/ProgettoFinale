@@ -6,17 +6,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.final_project.Model.Prodotto;
+import com.example.final_project.Repository.ProdottoRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProdottoController {
-    private final ProdottoService serv;
+    private final ProdottoRepository prodottoRepository;
 
     @GetMapping
-    public List<ProdottoDto> getAll() {
-        return serv.leggiTuttiProdottiComeDto();
+    public List<Prodotto> getAll() {
+        return prodottoRepository.findAll();
     }
-
 }

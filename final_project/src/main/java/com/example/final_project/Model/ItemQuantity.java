@@ -1,5 +1,6 @@
 package com.example.final_project.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -24,6 +25,7 @@ public class ItemQuantity extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_carrello")
+	@JsonIgnore
 	private Carrello carrello;
 
 	@ManyToOne(fetch = FetchType.EAGER)

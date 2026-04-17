@@ -2,7 +2,6 @@ package com.example.final_project.Security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -11,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,7 @@ public class JwtService {
 	@Value("${jwt.expiration}")
 	private long expirationMs;
 
-	private Key key;
+	private SecretKey key;
 
 	@PostConstruct
 	private void init() {
@@ -51,11 +50,11 @@ public class JwtService {
 		Date exp = new Date(now.getTime() + expirationMs);
 
 		return Jwts.builder()
-				.setSubject(auth.getName()) // username
+				.subject(auth.getName())
 				.claim("roles", roles)
-				.setIssuedAt(now)
-				.setExpiration(exp)
-				.signWith(key, SignatureAlgorithm.HS256)
+				.issuedAt(now)
+				.expiration(exp)
+				.signWith(key, Jwts.SIG.HS256)
 				.compact();
 	}
 
@@ -95,9 +94,9 @@ public class JwtService {
 
 	private Claims parse(String token) {
 		return Jwts.parser()
-				.setSigningKey(key)
+				.verifyWith(key)
 				.build()
-				.parseClaimsJws(token)
-				.getBody();
+				.parseSignedClaims(token)
+				.getPayload();
 	}
 }
