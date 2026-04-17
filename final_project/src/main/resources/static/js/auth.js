@@ -333,8 +333,8 @@
         if (items.length === 0) {
             container.innerHTML = `
                 <div class="text-center py-5">
-                    <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
-                    <p class="text-muted">Il carrello è vuoto</p>
+                    <i class="fas fa-shopping-cart fa-3x mb-3 text-white"></i>
+                    <p class="text-white">Il carrello è vuoto</p>
                 </div>`;
             return;
         }
@@ -384,8 +384,8 @@
         if (orders.length === 0) {
             container.innerHTML = `
                 <div class="col-12 text-center py-5">
-                    <i class="fas fa-box-open fa-3x mb-3 text-muted"></i>
-                    <h3 class="text-muted">Non hai ancora effettuato ordini</h3>
+                    <i class="fas fa-box-open fa-3x mb-3 text-white"></i>
+                    <h3 class="text-white mb-5">Non hai ancora effettuato ordini</h3>
                     <button class="btn btn-primary-custom mt-3" onclick="showShop()">Inizia a fare acquisti</button>
                 </div>`;
             return;
