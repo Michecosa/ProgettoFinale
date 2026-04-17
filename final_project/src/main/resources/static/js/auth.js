@@ -20,20 +20,66 @@
     /**
      * View Controllers
      */
-    const showView = (view) => {
-        const authView = document.getElementById('auth-view');
-        const shopView = document.getElementById('shop-view');
-        const mainNav = document.getElementById('main-nav');
-        if (view === 'shop') {
-            authView?.classList.add('d-none');
-            shopView?.classList.remove('d-none');
-            mainNav?.classList.remove('d-none');
-            initShop();
+    const showView = (viewName) => {
+        const views = ['home-view', 'shop-view', 'auth-view'];
+        views.forEach(v => {
+            const el = document.getElementById(v);
+            if (el) el.classList.add('d-none');
+        });
+
+        const activeView = document.getElementById(`${viewName}-view`);
+        if (activeView) activeView.classList.remove('d-none');
+        
+        // Update background if needed
+        if (viewName === 'auth') {
+            document.body.style.background = 'var(--bg-main)';
+        } else {
+            document.body.style.background = 'var(--bg-main)';
         }
-        else {
-            authView?.classList.remove('d-none');
-            shopView?.classList.add('d-none');
-            mainNav?.classList.add('d-none');
+
+        // Scroll to top
+        window.scrollTo(0, 0);
+
+        if (viewName === 'shop') {
+            fetchProducts();
+        }
+    };
+
+    window.showHome = () => showView('home');
+    window.showShop = () => showView('shop');
+    window.showAuth = (mode) => {
+        showView('auth');
+        window.toggleAuth(mode);
+    };
+
+    /**
+     * Auth Logic
+     */
+    window.toggleAuth = (mode) => {
+        const login = document.getElementById('login-section');
+        const register = document.getElementById('register-section');
+        if (mode === 'register') {
+            login.classList.add('d-none');
+            register.classList.remove('d-none');
+        } else {
+            login.classList.remove('d-none');
+            register.classList.add('d-none');
+        }
+    };
+
+    const updateAuthUI = () => {
+        const token = localStorage.getItem('jwt_token');
+        const userActions = document.getElementById('user-actions');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        
+        if (token) {
+            userActions.classList.add('d-none');
+            profileDropdown.classList.remove('d-none');
+            fetchCart();
+        } else {
+            userActions.classList.remove('d-none');
+            profileDropdown.classList.add('d-none');
+            document.getElementById('cart-badge').classList.add('d-none');
         }
     };
 
@@ -133,11 +179,10 @@
             if (response.ok) {
                 currentCart = await response.json();
                 renderCart();
-                showToast('Prodotto aggiunto al carrello!', 'success');
+                showToast('Prodotto aggiunto!', 'success');
             }
-        }
-        catch (err) {
-            showToast('Errore nell\'aggiunta al carrello', 'error');
+        } catch (err) {
+            showToast('Errore aggiunta carrello', 'error');
         }
     };
 
@@ -282,18 +327,16 @@
                     const token = await response.text();
                     localStorage.setItem('jwt_token', token);
                     showToast('Accesso effettuato!', 'success');
-                    showView('shop');
-                }
-                else {
+                    updateAuthUI();
+                    showHome();
+                } else {
                     showToast('Credenziali non valide', 'error');
                 }
-            }
-            catch (err) {
+            } catch (err) {
                 showToast('Errore di connessione', 'error');
-            }
-            finally {
-                if (loader)
-                    loader.style.display = 'none';
+            } finally {
+                text.classList.remove('d-none');
+                spinner.classList.add('d-none');
             }
         });
 
@@ -316,55 +359,31 @@
                 });
 
                 if (response.ok) {
-                    showToast('Registrazione completata!', 'success');
+                    showToast('Account creato con successo!', 'success');
                     window.toggleAuth('login');
+                } else {
+                    const err = await response.text();
+                    showToast(err || 'Errore registrazione', 'error');
                 }
-                else {
-                    showToast('Errore registrazione', 'error');
-                }
-            }
-            catch (err) {
+            } catch (err) {
                 showToast('Errore di connessione', 'error');
-            }
-            finally {
-                if (loader)
-                    loader.style.display = 'none';
+            } finally {
+                text.classList.remove('d-none');
+                spinner.classList.add('d-none');
             }
         });
-    };
-    /**
-     * Utilities
-     */
-    const showToast = (message, type = 'info') => {
-        const container = document.getElementById('toast-container');
-        if (!container)
-            return;
-        const toast = document.createElement('div');
-        toast.className = `custom-toast ${type} animate__animated animate__fadeInRight`;
-        toast.innerHTML = `<span>${message}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => {
-            toast.classList.replace('animate__fadeInRight', 'animate__fadeOutRight');
-            setTimeout(() => toast.remove(), 500);
-        }, 3000);
-    };
-    window.toggleAuth = (mode) => {
-        const loginSection = document.getElementById('login-section');
-        const registerSection = document.getElementById('register-section');
-        if (!loginSection || !registerSection)
-            return;
-        if (mode === 'register') {
-            loginSection.style.display = 'none';
-            registerSection.style.display = 'block';
-        }
-        else {
-            loginSection.style.display = 'block';
-            registerSection.style.display = 'none';
-        }
-    };
-    window.logout = () => {
-        localStorage.removeItem('jwt_token');
-        showView('auth');
+
+        // Search Handler
+        document.getElementById('search-input')?.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderProducts(e.target.value);
+            }, 300);
+        });
+
+        // Init UI
+        updateAuthUI();
+        showHome();
     };
 
     document.addEventListener('DOMContentLoaded', initApp);
