@@ -19,6 +19,7 @@ public class Categoria extends BaseEntity {
 	private String nome;
 
 	@ManyToMany(mappedBy = "categorie")
+	@com.fasterxml.jackson.annotation.JsonIgnore
 	private List<Prodotto> prodotti = new ArrayList<>();
 
 }
