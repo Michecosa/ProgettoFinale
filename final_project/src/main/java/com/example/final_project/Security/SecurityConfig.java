@@ -1,5 +1,7 @@
 package com.example.final_project.Security;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -57,7 +57,8 @@ public class SecurityConfig {
 								.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 								.requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
 								.requestMatchers("/error").permitAll()
-								.requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+								.requestMatchers("/", "/index.html", "/css/**", "/js/**", "/img/**", "/favicon.ico")
+								.permitAll()
 								.requestMatchers(HttpMethod.GET, "/api/products").permitAll()
 								.requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
 								.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
