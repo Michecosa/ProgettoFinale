@@ -117,7 +117,7 @@
             const badgesEl = document.getElementById('profile-role-badges');
             badgesEl.innerHTML = roles.map(role => {
                 if (role === 'ROLE_ADMIN') {
-                    return '<span class="badge bg-warning text-dark me-1"><i class="fas fa-crown me-1"></i>Utente Premium</span>';
+                    return '<span class="badge bg-warning text-white me-1"><i class="fas fa-crown me-1"></i>Utente Premium</span>';
                 } else if (role === 'ROLE_USER') {
                     return '<span class="badge bg-secondary me-1"><i class="fas fa-user me-1"></i>Utente Normale</span>';
                 }
