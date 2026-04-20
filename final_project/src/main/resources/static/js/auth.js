@@ -582,21 +582,230 @@
         `).join('');
     };
 
-    window.handleCheckout = async () => {
-        const token = localStorage.getItem('jwt_token');
-        if (!token) {
-            showToast('Accedi per completare l\'acquisto', 'info');
-            showAuth('login');
-            return;
+    /**
+     * Checkout Modal
+     */
+    const ensureCheckoutModal = () => {
+        if (document.getElementById('checkoutModal')) return;
+
+        const modal = document.createElement('div');
+        modal.innerHTML = `
+        <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="
+                    background: var(--bg-surface);
+                    border: 1px solid var(--glass-border);
+                    border-radius: 24px;
+                    box-shadow: 0 25px 60px -10px rgba(0,0,0,0.6);
+                    overflow: hidden;
+                ">
+                    <!-- Header -->
+                    <div class="modal-header" style="
+                        background: rgba(15,23,42,0.6);
+                        border-bottom: 1px solid var(--glass-border);
+                        padding: 1.5rem 2rem;
+                    ">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="
+                                width: 44px; height: 44px;
+                                background: var(--gradient-primary);
+                                border-radius: 14px;
+                                display: flex; align-items: center; justify-content: center;
+                                font-size: 1.2rem;
+                            ">
+                                <i class="fas fa-shopping-bag text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold text-white">Completa il tuo ordine</h5>
+                                <small style="color: var(--text-muted);">Inserisci i dati di spedizione</small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="opacity:0.5;"></button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body" style="padding: 2rem;">
+                        <!-- Order Summary -->
+                        <div id="checkout-summary" style="
+                            background: rgba(15,23,42,0.4);
+                            border: 1px solid var(--glass-border);
+                            border-radius: 16px;
+                            padding: 1rem 1.25rem;
+                            margin-bottom: 1.5rem;
+                        ">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color: var(--text-muted); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Riepilogo</span>
+                                <span id="checkout-total-display" style="
+                                    background: var(--gradient-primary);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    font-weight: 800; font-size: 1.1rem;
+                                ">€ 0.00</span>
+                            </div>
+                            <div id="checkout-items-preview" style="margin-top: 0.75rem;"></div>
+                        </div>
+
+                        <!-- Address Input -->
+                        <label style="
+                            display: block;
+                            font-size: 0.72rem;
+                            font-weight: 700;
+                            letter-spacing: 1px;
+                            color: var(--text-muted);
+                            text-transform: uppercase;
+                            margin-bottom: 0.5rem;
+                        ">Indirizzo di spedizione</label>
+                        <div id="checkout-input-wrapper" style="
+                            background: rgba(15,23,42,0.4);
+                            border: 1px solid var(--glass-border);
+                            border-radius: 15px;
+                            padding: 0.9rem 1.1rem;
+                            display: flex;
+                            align-items: flex-start;
+                            gap: 12px;
+                            transition: all 0.3s;
+                        ">
+                            <i class="fas fa-map-marker-alt mt-1" style="color: var(--text-muted);"></i>
+                            <textarea
+                                id="checkout-address-input"
+                                placeholder="Es: Via Roma 1, 00100 Roma RM"
+                                rows="2"
+                                style="
+                                    background: transparent;
+                                    border: none;
+                                    color: var(--text-main);
+                                    width: 100%;
+                                    outline: none;
+                                    resize: none;
+                                    font-family: inherit;
+                                    font-size: 0.95rem;
+                                    line-height: 1.5;
+                                "
+                            ></textarea>
+                        </div>
+                        <p id="checkout-addr-error" style="
+                            color: #ef4444;
+                            font-size: 0.8rem;
+                            margin-top: 0.4rem;
+                            display: none;
+                        "><i class="fas fa-exclamation-circle me-1"></i>Inserisci un indirizzo valido</p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer" style="
+                        background: rgba(15,23,42,0.4);
+                        border-top: 1px solid var(--glass-border);
+                        padding: 1.25rem 2rem;
+                        gap: 0.75rem;
+                    ">
+                        <button
+                            type="button"
+                            data-bs-dismiss="modal"
+                            style="
+                                background: transparent;
+                                border: 1px solid var(--glass-border);
+                                color: var(--text-muted);
+                                border-radius: 12px;
+                                padding: 0.7rem 1.5rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.3s;
+                            "
+                            onmouseover="this.style.borderColor='rgba(255,255,255,0.3)';this.style.color='white';"
+                            onmouseout="this.style.borderColor='var(--glass-border)';this.style.color='var(--text-muted)';"
+                        >Annulla</button>
+                        <button
+                            id="checkout-confirm-btn"
+                            onclick="confirmCheckoutFromModal()"
+                            style="
+                                background: var(--gradient-primary);
+                                border: none;
+                                border-radius: 12px;
+                                padding: 0.7rem 2rem;
+                                font-weight: 700;
+                                color: white;
+                                cursor: pointer;
+                                transition: all 0.3s;
+                                box-shadow: 0 8px 20px -4px rgba(168,85,247,0.4);
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                            "
+                            onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 28px -4px rgba(168,85,247,0.5)';"
+                            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 20px -4px rgba(168,85,247,0.4)';"
+                        >
+                            <span id="checkout-btn-text"><i class="fas fa-lock me-2"></i>Conferma ordine</span>
+                            <span id="checkout-btn-spinner" class="d-none">
+                                <span class="spinner-border spinner-border-sm" role="status"></span>
+                                <span class="ms-1">Elaborazione...</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        document.body.appendChild(modal.firstElementChild);
+
+        // Focus style on textarea
+        const wrapper = document.getElementById('checkout-input-wrapper');
+        const textarea = document.getElementById('checkout-address-input');
+        textarea?.addEventListener('focus', () => {
+            wrapper.style.borderColor = 'var(--primary)';
+            wrapper.style.boxShadow = '0 0 0 4px rgba(99,102,241,0.1)';
+        });
+        textarea?.addEventListener('blur', () => {
+            wrapper.style.borderColor = 'var(--glass-border)';
+            wrapper.style.boxShadow = 'none';
+        });
+    };
+
+    const openCheckoutModal = () => {
+        ensureCheckoutModal();
+
+        // Populate summary
+        const items = currentCart?.items || [];
+        const total = items.reduce((acc, i) => acc + (i.prodotto.prezzo * i.qtn), 0);
+
+        const totalDisplay = document.getElementById('checkout-total-display');
+        if (totalDisplay) totalDisplay.textContent = `€ ${total.toFixed(2)}`;
+
+        const preview = document.getElementById('checkout-items-preview');
+        if (preview) {
+            preview.innerHTML = items.map(item => `
+                <div class="d-flex justify-content-between align-items-center py-1" style="border-top: 1px solid rgba(255,255,255,0.05);">
+                    <span style="color: var(--text-main); font-size: 0.88rem;">${item.prodotto.nome} <span style="color:var(--text-muted);">x${item.qtn}</span></span>
+                    <span style="color: var(--text-muted); font-size: 0.88rem;">€ ${(item.prodotto.prezzo * item.qtn).toFixed(2)}</span>
+                </div>
+            `).join('');
         }
 
-        if (!currentCart || !currentCart.items || currentCart.items.length === 0) {
-            showToast('Il tuo carrello è vuoto', 'error');
+        // Reset input & error
+        const addrInput = document.getElementById('checkout-address-input');
+        if (addrInput) addrInput.value = '';
+        const errEl = document.getElementById('checkout-addr-error');
+        if (errEl) errEl.style.display = 'none';
+
+        const modalEl = document.getElementById('checkoutModal');
+        const bsModal = new bootstrap.Modal(modalEl);
+        bsModal.show();
+    };
+
+    window.confirmCheckoutFromModal = async () => {
+        const indirizzo = document.getElementById('checkout-address-input')?.value?.trim();
+        const errEl = document.getElementById('checkout-addr-error');
+
+        if (!indirizzo) {
+            if (errEl) errEl.style.display = 'block';
             return;
         }
+        if (errEl) errEl.style.display = 'none';
 
-        const indirizzo = prompt("Inserisci l'indirizzo di spedizione:");
-        if (!indirizzo) return;
+        const btnText = document.getElementById('checkout-btn-text');
+        const btnSpinner = document.getElementById('checkout-btn-spinner');
+        const confirmBtn = document.getElementById('checkout-confirm-btn');
+        if (btnText) btnText.classList.add('d-none');
+        if (btnSpinner) btnSpinner.classList.remove('d-none');
+        if (confirmBtn) confirmBtn.disabled = true;
 
         try {
             const response = await fetch(`/api/orders?indirizzo=${encodeURIComponent(indirizzo)}`, {
@@ -605,6 +814,10 @@
             });
 
             if (response.ok) {
+                // Close modal
+                const modalEl = document.getElementById('checkoutModal');
+                bootstrap.Modal.getInstance(modalEl)?.hide();
+
                 showToast('Ordine creato con successo!', 'success');
 
                 // Close offcanvas if open
@@ -626,7 +839,27 @@
             }
         } catch (err) {
             showToast('Errore di connessione durante il checkout', 'error');
+        } finally {
+            if (btnText) btnText.classList.remove('d-none');
+            if (btnSpinner) btnSpinner.classList.add('d-none');
+            if (confirmBtn) confirmBtn.disabled = false;
         }
+    };
+
+    window.handleCheckout = async () => {
+        const token = localStorage.getItem('jwt_token');
+        if (!token) {
+            showToast('Accedi per completare l\'acquisto', 'info');
+            showAuth('login');
+            return;
+        }
+
+        if (!currentCart || !currentCart.items || currentCart.items.length === 0) {
+            showToast('Il tuo carrello è vuoto', 'error');
+            return;
+        }
+
+        openCheckoutModal();
     };
 
     /**
@@ -635,7 +868,7 @@
     const showToast = (message, type = 'success') => {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.className = `custom-toast toast-${type} animate__animated animate__fadeInRight`;
+        toast.className = `custom-toast toast-${type} animate__animated animate__fadeInDown`;
         
         let icon = 'fa-check-circle';
         if (type === 'error') icon = 'fa-exclamation-triangle';
@@ -648,7 +881,7 @@
         
         container.appendChild(toast);
         setTimeout(() => {
-            toast.classList.replace('animate__fadeInRight', 'animate__fadeOutRight');
+            toast.classList.replace('animate__fadeInDown', 'animate__fadeOutUp');
             setTimeout(() => toast.remove(), 500);
         }, 3000);
     };
