@@ -30,6 +30,7 @@
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="#" onclick="showHome()">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" onclick="showShop()">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Collezioni</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Contatti</a></li>
                 </ul>
 
@@ -52,7 +53,7 @@
                             <i class="fas fa-user"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 bg-dark text-white">
-                            <li><a class="dropdown-item text-white" href="#"><i class="fas fa-user-circle me-2"></i>
+                            <li><a class="dropdown-item text-white" href="#" onclick="showProfile()"><i class="fas fa-user-circle me-2"></i>
                                     Profilo</a></li>
                             <li><a class="dropdown-item text-white" href="#" onclick="showOrders()"><i
                                         class="fas fa-history me-2"></i> Ordini</a></li>
@@ -190,6 +191,112 @@
             <div class="col-12 text-center py-5">
                 <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile View -->
+    <div id="profile-view" class="container py-5 d-none" style="margin-top: 80px;">
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold">Il mio <span class="text-gradient">Profilo</span></h2>
+                <p class="text-white">Gestisci le informazioni del tuo account</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Avatar + info -->
+            <div class="col-lg-4">
+                <div class="profile-avatar-card text-center p-4">
+                    <div class="profile-avatar mx-auto mb-3">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1" id="profile-display-name">&#8212;</h4>
+                    <p class="text-muted small mb-3" id="profile-display-email">&#8212;</p>
+                    <span class="badge profile-badge-member">
+                        <i class="fas fa-star me-1"></i> Membro FinalShop
+                    </span>
+                    <hr class="my-4 border-secondary">
+                    <div class="d-flex justify-content-around text-center">
+                        <div>
+                            <div class="profile-stat-number" id="profile-orders-count">&#8212;</div>
+                            <div class="profile-stat-label">Ordini</div>
+                        </div>
+                        <div class="profile-stat-divider"></div>
+                        <div>
+                            <div class="profile-stat-number" id="profile-spent-total">&#8212;</div>
+                            <div class="profile-stat-label">Spesa totale</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dati account + cambio password -->
+            <div class="col-lg-8">
+                <!-- Info account (read-only) -->
+                <div class="profile-section-card mb-4">
+                    <div class="profile-section-header">
+                        <i class="fas fa-id-card me-2 text-primary"></i>
+                        <span>Informazioni Account</span>
+                    </div>
+                    <div class="profile-section-body">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="profile-field-label">Username</label>
+                                <div class="profile-field-value" id="profile-username">&#8212;</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="profile-field-label">Email</label>
+                                <div class="profile-field-value" id="profile-email">&#8212;</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="profile-field-label">Membro dal</label>
+                                <div class="profile-field-value" id="profile-joined">&#8212;</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="profile-field-label">Ultimo accesso</label>
+                                <div class="profile-field-value" id="profile-last-login">&#8212;</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cambio password -->
+                <div class="profile-section-card">
+                    <div class="profile-section-header">
+                        <i class="fas fa-lock me-2 text-primary"></i>
+                        <span>Cambia Password</span>
+                    </div>
+                    <div class="profile-section-body">
+                        <div id="change-password-form">
+                            <div class="mb-3">
+                                <label class="profile-field-label mb-2">Password attuale</label>
+                                <div class="input-group-custom mb-0">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="current-password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="profile-field-label mb-2">Nuova password</label>
+                                <div class="input-group-custom mb-0">
+                                    <i class="fas fa-key"></i>
+                                    <input type="password" id="new-password" placeholder="Minimo 6 caratteri">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="profile-field-label mb-2">Conferma nuova password</label>
+                                <div class="input-group-custom mb-0">
+                                    <i class="fas fa-key"></i>
+                                    <input type="password" id="confirm-password" placeholder="Ripeti la nuova password">
+                                </div>
+                            </div>
+                            <button class="btn-primary-custom w-auto px-5" onclick="handleChangePassword()">
+                                <span id="change-pw-text"><i class="fas fa-save me-2"></i>Salva Password</span>
+                                <span id="change-pw-spinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

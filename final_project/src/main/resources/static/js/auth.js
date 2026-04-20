@@ -22,7 +22,7 @@
      * View Controllers
      */
     const showView = (viewName) => {
-        const views = ['home-view', 'shop-view', 'auth-view', 'orders-view'];
+        const views = ['home-view', 'shop-view', 'auth-view', 'orders-view', 'profile-view'];
         views.forEach(v => {
             const el = document.getElementById(v);
             if (el) el.classList.add('d-none');
@@ -65,6 +65,121 @@
         showView('auth');
         window.toggleAuth(mode);
     };
+
+    /**
+     * Profile Logic
+     */
+    window.showProfile = () => {
+        const token = localStorage.getItem('jwt_token');
+        if (!token) {
+            showToast('Devi accedere per vedere il profilo', 'info');
+            showAuth('login');
+            return;
+        }
+        showView('profile');
+        fetchProfile();
+    };
+
+    const fetchProfile = async () => {
+        try {
+            const response = await fetch('/api/auth/me', { headers: getAuthHeaders() });
+            if (response.ok) {
+                const user = await response.json();
+                renderProfile(user);
+            } else if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('jwt_token');
+                updateAuthUI();
+                showToast('Sessione scaduta. Accedi di nuovo.', 'error');
+                showAuth('login');
+            }
+        } catch (err) {
+            // Fallback: parse username from JWT payload
+            try {
+                const token = localStorage.getItem('jwt_token');
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                renderProfile({ username: payload.sub || payload.username || 'Utente', mail: '' });
+            } catch {
+                showToast('Impossibile caricare il profilo', 'error');
+            }
+        }
+    };
+
+    const renderProfile = async (user) => {
+        document.getElementById('profile-display-name').textContent = user.username || '\u2014';
+        document.getElementById('profile-display-email').textContent = user.mail || user.email || '\u2014';
+        document.getElementById('profile-username').textContent = user.username || '\u2014';
+        document.getElementById('profile-email').textContent = user.mail || user.email || '\u2014';
+
+        if (user.createdAt || user.registrationDate) {
+            document.getElementById('profile-joined').textContent =
+                new Date(user.createdAt || user.registrationDate).toLocaleDateString('it-IT');
+        } else {
+            document.getElementById('profile-joined').textContent = 'N/D';
+        }
+        document.getElementById('profile-last-login').textContent =
+            new Date().toLocaleDateString('it-IT');
+
+        try {
+            const resp = await fetch('/api/orders', { headers: getAuthHeaders() });
+            if (resp.ok) {
+                const orderList = await resp.json();
+                document.getElementById('profile-orders-count').textContent = orderList.length;
+                const total = orderList.reduce((acc, o) =>
+                    acc + o.items.reduce((s, i) => s + (i.prodotto.prezzo * i.qtn), 0), 0);
+                document.getElementById('profile-spent-total').textContent = '\u20ac ' + total.toFixed(2);
+            }
+        } catch {
+            document.getElementById('profile-orders-count').textContent = '\u2014';
+            document.getElementById('profile-spent-total').textContent = '\u2014';
+        }
+    };
+
+    window.handleChangePassword = async () => {
+        const currentPw = document.getElementById('current-password').value;
+        const newPw = document.getElementById('new-password').value;
+        const confirmPw = document.getElementById('confirm-password').value;
+
+        if (!currentPw || !newPw || !confirmPw) {
+            showToast('Compila tutti i campi', 'error');
+            return;
+        }
+        if (newPw.length < 6) {
+            showToast('La nuova password deve avere almeno 6 caratteri', 'error');
+            return;
+        }
+        if (newPw !== confirmPw) {
+            showToast('Le password non coincidono', 'error');
+            return;
+        }
+
+        const text = document.getElementById('change-pw-text');
+        const spinner = document.getElementById('change-pw-spinner');
+        text.classList.add('d-none');
+        spinner.classList.remove('d-none');
+
+        try {
+            const response = await fetch('/api/auth/change-password', {
+                method: 'PUT',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ currentPassword: currentPw, newPassword: newPw })
+            });
+            if (response.ok) {
+                showToast('Password aggiornata con successo!', 'success');
+                document.getElementById('current-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+            } else {
+                const msg = await response.text();
+                showToast(msg || 'Errore durante il cambio password', 'error');
+            }
+        } catch {
+            showToast('Errore di connessione', 'error');
+        } finally {
+            text.classList.remove('d-none');
+            spinner.classList.add('d-none');
+        }
+    };
+
 
     /**
      * Auth Logic
