@@ -27,7 +27,7 @@ public class Carrello extends BaseEntity {
 
 	/**
 	 * Restituisce un Item se è già presente il prodotto, null se non è presente
-	 * 
+	 *  
 	 * @return
 	 */
 	public ItemQuantity productAlreadyPresent(Prodotto p) {
