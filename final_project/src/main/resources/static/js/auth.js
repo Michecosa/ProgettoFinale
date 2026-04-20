@@ -120,6 +120,39 @@
         }
     };
 
+    const techIcon = (nome) => {
+        const n = (nome || '').toLowerCase();
+        if (n.includes('node.js') || n.includes('nodejs')) return { cls: 'fab', icon: 'fa-node-js' };
+        if (n.includes('react')) return { cls: 'fab', icon: 'fa-react' };
+        if (n.includes('vue')) return { cls: 'fab', icon: 'fa-vuejs' };
+        if (n.includes('angular')) return { cls: 'fab', icon: 'fa-angular' };
+        if (n.includes('python')) return { cls: 'fab', icon: 'fa-python' };
+        if (n.includes('java') && !n.includes('javascript')) return { cls: 'fab', icon: 'fa-java' };
+        if (n.includes('javascript') || n.includes('js')) return { cls: 'fab', icon: 'fa-js' };
+        if (n.includes('php')) return { cls: 'fab', icon: 'fa-php' };
+        if (n.includes('docker')) return { cls: 'fab', icon: 'fa-docker' };
+        if (n.includes('aws') || n.includes('amazon')) return { cls: 'fab', icon: 'fa-aws' };
+        if (n.includes('html')) return { cls: 'fab', icon: 'fa-html5' };
+        if (n.includes('css')) return { cls: 'fab', icon: 'fa-css3-alt' };
+        if (n.includes('github') || n.includes('git')) return { cls: 'fab', icon: 'fa-git-alt' };
+        if (n.includes('linux')) return { cls: 'fab', icon: 'fa-linux' };
+        return null;
+    };
+
+    const categoryIcon = (categorie) => {
+        if (!categorie || categorie.length === 0) return { cls: 'fas', icon: 'fa-code' };
+        const nome = categorie[0].nome.toLowerCase();
+        if (nome.includes('corso') || nome.includes('corsi')) return { cls: 'fas', icon: 'fa-graduation-cap' };
+        if (nome.includes('framework') || nome.includes('libreri')) return { cls: 'fas', icon: 'fa-cubes' };
+        if (nome.includes('tool') || nome.includes('utility') || nome.includes('strument')) return { cls: 'fas', icon: 'fa-tools' };
+        if (nome.includes('template') || nome.includes('starter')) return { cls: 'fas', icon: 'fa-file-code' };
+        if (nome.includes('plugin') || nome.includes('estension')) return { cls: 'fas', icon: 'fa-puzzle-piece' };
+        if (nome.includes('ebook') || nome.includes('guida') || nome.includes('libro')) return { cls: 'fas', icon: 'fa-book-open' };
+        return { cls: 'fas', icon: 'fa-code' };
+    };
+
+    const getProductIcon = (p) => techIcon(p.nome) || categoryIcon(p.categorie);
+
     const renderProducts = (query = '') => {
         const grid = document.getElementById('products-grid');
         const countEl = document.getElementById('product-count');
@@ -127,7 +160,7 @@
 
         let filtered = products;
         if (query) {
-            filtered = products.filter(p => 
+            filtered = products.filter(p =>
                 p.nome.toLowerCase().includes(query.toLowerCase())
             );
         }
@@ -139,23 +172,14 @@
             return;
         }
 
-        const categoryIcon = (categorie) => {
-            if (!categorie || categorie.length === 0) return 'fa-box';
-            const nome = categorie[0].nome.toLowerCase();
-            if (nome.includes('elettronica')) return 'fa-microchip';
-            if (nome.includes('abbigliamento')) return 'fa-tshirt';
-            if (nome.includes('sport')) return 'fa-running';
-            if (nome.includes('casa')) return 'fa-home';
-            if (nome.includes('libri')) return 'fa-book';
-            return 'fa-tag';
-        };
-
-        grid.innerHTML = filtered.map(p => `
+        grid.innerHTML = filtered.map(p => {
+            const { cls, icon } = getProductIcon(p);
+            return `
             <div class="col-md-4 col-lg-3 fade-in-up">
                 <div class="product-card">
                     <div class="product-image-box">
                         <span class="badge-new">NEW</span>
-                        <i class="fas ${categoryIcon(p.categorie)}"></i>
+                        <i class="${cls} ${icon}"></i>
                         <div class="price-box">€ ${p.prezzo.toFixed(2)}</div>
                     </div>
                     <div class="product-info">
@@ -167,7 +191,8 @@
                     </div>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     };
 
     const renderFeaturedProducts = () => {
@@ -182,22 +207,14 @@
             return;
         }
 
-        const categoryIcon = (categorie) => {
-            if (!categorie || categorie.length === 0) return 'fa-box';
-            const nome = categorie[0].nome.toLowerCase();
-            if (nome.includes('elettronica')) return 'fa-microchip';
-            if (nome.includes('abbigliamento')) return 'fa-tshirt';
-            if (nome.includes('sport')) return 'fa-running';
-            if (nome.includes('casa')) return 'fa-home';
-            return 'fa-tag';
-        };
-
-        grid.innerHTML = featured.map(p => `
+        grid.innerHTML = featured.map(p => {
+            const { cls, icon } = getProductIcon(p);
+            return `
             <div class="col-md-6 col-lg-3 fade-in-up">
                 <div class="product-card">
                     <div class="product-image-box">
                         <span class="badge-new">NEW</span>
-                        <i class="fas ${categoryIcon(p.categorie)}"></i>
+                        <i class="${cls} ${icon}"></i>
                         <div class="price-box">€ ${p.prezzo.toFixed(2)}</div>
                     </div>
                     <div class="product-info">
@@ -209,7 +226,8 @@
                     </div>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     };
 
     /**
