@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * FinalShop - Main Application Logic
+ * CodeShop - Main Application Logic
  */
 (() => {
     // State
