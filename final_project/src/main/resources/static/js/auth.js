@@ -527,18 +527,20 @@
             return;
         }
 
-        container.innerHTML = items.map(item => `
+        container.innerHTML = items.map(item => {
+            const { cls, icon } = getProductIcon(item.prodotto);
+            return `
             <div class="cart-item animate__animated animate__fadeIn">
-                <div class="bg-dark rounded py-2 px-3">
-                    <i class="fas fa-tag text-primary"></i>
+                <div class="bg-navbar-darker rounded py-2 px-3">
+                    <i class="${cls} ${icon} text-primary"></i>
                 </div>
                 <div class="cart-item-info">
                     <div class="fw-bold">${item.prodotto.nome}</div>
-                    <div class="text-muted small">€ ${item.prodotto.prezzo.toFixed(2)} cad.</div>
+                    <div class="text-white small">€ ${item.prodotto.prezzo.toFixed(2)} cad.</div>
                     <div class="d-flex align-items-center mt-2">
                         <div class="btn-group btn-group-sm">
                             <button class="btn btn-outline-secondary btn-sm px-2 py-0 border-secondary" onclick="updateItemQuantity(${item.prodotto.id}, -1)">-</button>
-                            <span class="px-3 border-top border-bottom border-secondary bg-dark" style="line-height: 1.8;">${item.qtn}</span>
+                            <span class="px-3 cart-quantity-badge" style="line-height: 1.8;">${item.qtn}</span>
                             <button class="btn btn-outline-secondary btn-sm px-2 py-0 border-secondary" onclick="updateItemQuantity(${item.prodotto.id}, 1)">+</button>
                         </div>
                     </div>
@@ -547,7 +549,8 @@
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
-        `).join('');
+        `;
+        }).join('');
     };
 
     /**
@@ -600,17 +603,20 @@
                     <div class="order-card-body">
                         <div class="row">
                             <div class="col-md-8">
-                                ${order.items.map(item => `
+                                ${order.items.map(item => {
+                                    const { cls, icon } = getProductIcon(item.prodotto);
+                                    return `
                                     <div class="d-flex align-items-center mb-3">
                                         <div class="order-item-icon me-3">
-                                            <i class="fas fa-tag"></i>
+                                            <i class="${cls} ${icon}"></i>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 fw-bold text-white">${item.prodotto.nome}</h6>
                                             <p class="order-item-meta mb-0">Quantità: ${item.qtn} • Prezzo unitario: € ${item.prodotto.prezzo.toFixed(2)}</p>
                                         </div>
                                     </div>
-                                `).join('')}
+                                `;
+                                }).join('')}
                             </div>
                             <div class="col-md-4 order-delivery-col py-2">
                                 <h6 class="fw-bold mb-3 text-white">Dettagli Consegna</h6>

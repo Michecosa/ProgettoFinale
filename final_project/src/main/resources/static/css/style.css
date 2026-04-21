@@ -386,7 +386,7 @@ body {
 
 /* Cart Offcanvas */
 .offcanvas {
-    background-color: var(--bg-main);
+    background-color: var(--bg-main) !important;
     border-left: 1px solid var(--glass-border);
 }
 
@@ -406,6 +406,18 @@ body {
 .cart-item-info {
     flex-grow: 1;
     margin-left: 1rem;
+}
+
+.bg-navbar-darker {
+    background: rgba(10, 15, 28, 0.6) !important;
+    border: 1px solid var(--glass-border);
+}
+
+.cart-quantity-badge {
+    background: rgba(15, 23, 42, 0.6);
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--text-main);
 }
 
 .cart-total-box {
