@@ -6,8 +6,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: la_tua_email@gmail.com
-    password: la_tua_password_app
+    username: codeshop645@gmail.com
+    password: CodeShop0987654321.
     properties:
       mail:
         smtp:
@@ -33,4 +33,4 @@ spring:
 # Configurazione JWT (Proprietà Custom)
 jwt:
   secret: MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4 # Chiave da 256 bit codificata in Base64
-  expiration: 86400000 # 1 giorno in millisecondi
+  expiration: 86400000 # 1 giorno in millisecondi
