@@ -626,14 +626,17 @@ body {
     color: var(--text-muted);
     text-transform: uppercase;
     margin-bottom: 4px;
+    padding-left: 0.5rem;
 }
 
 .profile-field-value {
-    font-weight: 600;
+    font-weight: 400;
     color: var(--text-main);
     background: rgba(15, 23, 42, 0.4);
     border: 1px solid var(--glass-border);
     border-radius: 10px;
+    padding-left: 0.7rem;
+    padding-block: 0.2rem;
 }
 
 /* Footer */
