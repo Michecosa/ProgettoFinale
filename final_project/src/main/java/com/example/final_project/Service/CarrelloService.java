@@ -30,7 +30,8 @@ public class CarrelloService {
     // Se il prodotto è già presente aggiorna la quantità, altrimenti lo aggiunge
     // come nuovo item.
     public Carrello aggiungiProdotto(String username, Long idProdotto, int qtn) {
-        // FIX: validazione quantità (Allow negative for decrement, but handle 0 separately)
+        // FIX: validazione quantità (Allow negative for decrement, but handle 0
+        // separately)
         if (qtn == 0) {
             throw new IllegalArgumentException("La quantità non può essere zero");
         }

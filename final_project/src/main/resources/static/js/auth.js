@@ -31,7 +31,7 @@
 
         const activeView = document.getElementById(`${viewName}-view`);
         if (activeView) activeView.classList.remove('d-none');
-        
+
         // Update background if needed
         if (viewName === 'auth') {
             document.body.style.background = 'var(--bg-main)';
@@ -216,7 +216,7 @@
         const token = localStorage.getItem('jwt_token');
         const userActions = document.getElementById('user-actions');
         const profileDropdown = document.getElementById('profile-dropdown');
-        
+
         if (token) {
             userActions.classList.add('d-none');
             profileDropdown.classList.remove('d-none');
@@ -500,7 +500,7 @@
         if (!container || !currentCart) return;
 
         const items = currentCart.items || [];
-        
+
         // Badge
         if (items.length > 0) {
             badge.classList.remove('d-none');
@@ -561,6 +561,7 @@
             const response = await fetch('/api/orders', { headers: getAuthHeaders() });
             if (response.ok) {
                 orders = await response.json();
+                orders.sort((a, b) => b.id - a.id);
                 renderOrders();
             }
         } catch (err) {
@@ -604,8 +605,8 @@
                         <div class="row">
                             <div class="col-md-8">
                                 ${order.items.map(item => {
-                                    const { cls, icon } = getProductIcon(item.prodotto);
-                                    return `
+            const { cls, icon } = getProductIcon(item.prodotto);
+            return `
                                     <div class="d-flex align-items-center mb-3">
                                         <div class="order-item-icon me-3">
                                             <i class="${cls} ${icon}"></i>
@@ -616,7 +617,7 @@
                                         </div>
                                     </div>
                                 `;
-                                }).join('')}
+        }).join('')}
                             </div>
                             <div class="col-md-4 order-delivery-col py-2">
                                 <h6 class="fw-bold mb-3 text-white">Dettagli Ricezione</h6>
@@ -913,7 +914,7 @@
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = `custom-toast toast-${type} animate__animated animate__fadeInDown`;
-        
+
         let icon = 'fa-check-circle';
         if (type === 'error') icon = 'fa-exclamation-triangle';
         if (type === 'info') icon = 'fa-info-circle';
@@ -922,7 +923,7 @@
             <i class="fas ${icon} me-2 text-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'}"></i>
             <span class="text-white">${message}</span>
         `;
-        
+
         container.appendChild(toast);
         setTimeout(() => {
             toast.classList.replace('animate__fadeInDown', 'animate__fadeOutUp');
