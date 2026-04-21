@@ -14,11 +14,12 @@ import com.example.final_project.Model.Ordine;
 import com.example.final_project.Model.Utente;
 import com.example.final_project.Repository.CarrelloRepository;
 import com.example.final_project.Repository.OrdineRepository;
-import com.example.final_project.Repository.UtenteRepository;
+import com.example.final_project.Observer.OrderObserver;
+import com.example.final_project.Observer.OrderSubject;
 
 // Service per la gestione degli ordini, contiene la logica di business per creare, aggiornare, visualizzare e eliminare gli ordini
 @Service
-public class OrdineService {
+public class OrdineService implements OrderSubject {
 
     @Autowired
     private OrdineRepository ordineRepository;
@@ -31,6 +32,28 @@ public class OrdineService {
 
     @Autowired
     private CarrelloService carrelloService;
+
+    // Lista degli osservatori (automaticamente iniettati da Spring se implementano
+    // OrderObserver)
+    @Autowired
+    private List<OrderObserver> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(OrderObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(OrderObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(Ordine ordine) {
+        for (OrderObserver observer : observers) {
+            observer.update(ordine);
+        }
+    }
 
     // Restituisce la lista di tutti gli ordini presenti nel database, utilizzato
     // principalmente per visualizzare gli ordini effettuati dagli utenti
@@ -85,6 +108,7 @@ public class OrdineService {
 
         Ordine saved = ordineRepository.save(ordine);
         carrelloService.svuotaCarrello(username);
+        notifyObservers(saved);
         return saved;
     }
 
