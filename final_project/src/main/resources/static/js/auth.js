@@ -604,16 +604,25 @@
                     <div class="order-card-body">
                         <div class="row">
                             <div class="col-md-8">
+                                <h6 class="fw-bold mb-3 text-white">I tuoi download</h6>
                                 ${order.items.map(item => {
             const { cls, icon } = getProductIcon(item.prodotto);
             return `
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="order-item-icon me-3">
-                                            <i class="${cls} ${icon}"></i>
+                                    <div class="row align-items-center g-2 mb-3">
+                                        <div class="col-12 col-md-9 d-flex align-items-center">
+                                            <div class="order-item-icon me-3 flex-shrink-0">
+                                                <i class="${cls} ${icon}"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold text-white">${item.prodotto.nome}</h6>
+                                                <p class="order-item-meta mb-0">Quantità: ${item.qtn} • Prezzo unitario: € ${item.prodotto.prezzo.toFixed(2)}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0 fw-bold text-white">${item.prodotto.nome}</h6>
-                                            <p class="order-item-meta mb-0">Quantità: ${item.qtn} • Prezzo unitario: € ${item.prodotto.prezzo.toFixed(2)}</p>
+                                        <div class="col-12 col-md-3 d-flex justify-content-md-end">
+                                            ${item.prodotto.linkDownload
+                                                ? `<a href="${item.prodotto.linkDownload}" class="btn-track-order w-100" target="_blank" rel="noopener noreferrer">Scarica</a>`
+                                                : `<span class="order-item-meta">N/D</span>`
+                                            }
                                         </div>
                                     </div>
                                 `;
@@ -622,7 +631,6 @@
                             <div class="col-md-4 order-delivery-col py-2">
                                 <h6 class="fw-bold mb-3 text-white">Dettagli Ricezione</h6>
                                 <p class="order-item-meta mb-1"><i class="fas fa-envelope me-2 text-primary"></i> ${order.indirizzo}</p>
-                                <button class="btn-track-order w-100 mt-2">Scarica Prodotti</button>
                             </div>
                         </div>
                     </div>

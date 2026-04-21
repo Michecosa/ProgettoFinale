@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import com.example.final_project.Model.ItemQuantity;
 import com.example.final_project.Model.Ordine;
 import com.example.final_project.Model.Utente;
 
@@ -84,13 +85,30 @@ public class EmailNotificationObserver implements OrderObserver, UserObserver, R
             helper.setTo(ordine.getUtente().getMail());
             helper.setSubject("Conferma Ordine #" + ordine.getId() + " - CodeShop");
             
+            StringBuilder downloadLinks = new StringBuilder();
+            for (ItemQuantity item : ordine.getItems()) {
+                String link = item.getProdotto().getLinkDownload();
+                String nome = item.getProdotto().getNome();
+                if (link != null && !link.isBlank()) {
+                    downloadLinks.append(
+                        "<div class='download-item'>" +
+                        "<span class='download-name'>" + nome + "</span>" +
+                        "<a href='" + link + "' class='button download-btn'>Scarica</a>" +
+                        "</div>"
+                    );
+                }
+            }
+
             String content = "<p>Gentile <strong>" + ordine.getUtente().getUsername() + "</strong>,</p>" +
                              "<p>Il tuo ordine &egrave; stato ricevuto con successo!</p>" +
                              "<div style='background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1);'>" +
                              "<p style='margin: 0;'><strong>Email di ricezione codice:</strong> " + ordine.getIndirizzo() + "</p>" +
-                             "<p style='margin: 10px 0 0 0; font-size: 1.2rem;'><strong>Totale: € " + String.format("%.2f", ordine.getTotale()) + "</strong></p>" +
+                             "<p style='margin: 10px 0 0 0; font-size: 1.2rem;'><strong>Totale: &euro; " + String.format("%.2f", ordine.getTotale()) + "</strong></p>" +
                              "</div>" +
-                             "<p>Riceverai il tuo codice digitale a breve all'indirizzo indicato.</p>";
+                             (downloadLinks.length() > 0
+                                 ? "<p><strong>I tuoi download:</strong></p>" +
+                                   "<div style='margin: 10px 0 20px 0;'>" + downloadLinks + "</div>"
+                                 : "<p>Riceverai il tuo codice digitale a breve all'indirizzo indicato.</p>");
             
             helper.setText(getHtmlTemplate("Grazie per il tuo Acquisto!", content), true);
 
@@ -117,6 +135,10 @@ public class EmailNotificationObserver implements OrderObserver, UserObserver, R
                ".footer { padding: 30px; text-align: center; font-size: 13px; color: #64748b; background-color: rgba(15,23,42,0.4); border-top: 1px solid rgba(255,255,255,0.05); }" +
                ".button { display: inline-block; padding: 14px 35px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: #ffffff !important; text-decoration: none; border-radius: 14px; font-weight: 700; margin: 20px 0; box-shadow: 0 10px 15px rgba(99,102,241,0.3); }" +
                "strong { color: #ffffff; }" +
+               ".download-item { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }" +
+               ".download-name { flex: 1 1 auto; min-width: 0; word-break: break-word; }" +
+               ".download-btn { flex-shrink: 0; margin: 0 !important; padding: 8px 18px !important; font-size: 14px !important; }" +
+               "@media (max-width: 480px) { .download-item { flex-direction: column; align-items: flex-start; } .download-btn { align-self: stretch; text-align: center; } }" +
                "</style>" +
                "</head>" +
                "<body>" +

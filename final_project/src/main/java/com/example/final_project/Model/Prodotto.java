@@ -32,6 +32,9 @@ public class Prodotto extends BaseEntity {
     @Column(nullable = false)
     private boolean disponibile = true;
 
+    /** URL del file zip scaricabile dopo l'acquisto */
+    private String linkDownload;
+
     @ManyToMany
     @JoinTable(
         name = "prodotto_to_categoria",
