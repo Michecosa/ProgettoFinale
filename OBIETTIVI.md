@@ -6,7 +6,7 @@
 ## 2. Sistema di notifiche 🔔
 - [x] **Notifica di aggiornamento password**: Se la password viene cambiata, l'utente viene avvisato tramite email
 - [x] **Notifica di conferma acquisto**: Al completamento di un acquisto, l'utente viene avvisato del corretto completamento
-- [ ] **Notifica di Benvenuto**: In caso di registrazione, l'utente ricererà un email di benvenuto da CodeShop
+- [x] **Notifica di Benvenuto**: In caso di registrazione, l'utente ricererà un email di benvenuto da CodeShop
 
 ## 3. Gestione Magazzino (Stock) 📦
 - [ ] **Scalamento Stock**: Implementare la logica in `OrdineService` che diminuisce il campo `stock` di ogni `Prodotto` acquistato
