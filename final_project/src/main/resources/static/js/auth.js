@@ -598,7 +598,7 @@
                             <span class="order-label">ORDINE #</span>
                             <span class="order-value">${order.id}</span>
                         </div>
-                        <span class="badge rounded-pill bg-success px-3 py-2">Consegnato</span>
+                        <span class="badge rounded-pill bg-success px-3 py-2">Inviato</span>
                     </div>
                     <div class="order-card-body">
                         <div class="row">
@@ -619,10 +619,9 @@
                                 }).join('')}
                             </div>
                             <div class="col-md-4 order-delivery-col py-2">
-                                <h6 class="fw-bold mb-3 text-white">Dettagli Consegna</h6>
-                                <p class="order-item-meta mb-1"><i class="fas fa-map-marker-alt me-2 text-primary"></i> ${order.indirizzo}</p>
-                                <p class="order-item-meta"><i class="fas fa-truck me-2 text-primary"></i> Consegna stimata: ${new Date(order.consegna).toLocaleDateString()}</p>
-                                <button class="btn-track-order w-100 mt-2">Traccia pacco</button>
+                                <h6 class="fw-bold mb-3 text-white">Dettagli Ricezione</h6>
+                                <p class="order-item-meta mb-1"><i class="fas fa-envelope me-2 text-primary"></i> ${order.indirizzo}</p>
+                                <button class="btn-track-order w-100 mt-2">Scarica Prodotti</button>
                             </div>
                         </div>
                     </div>
@@ -666,7 +665,7 @@
                             </div>
                             <div>
                                 <h5 class="mb-0 fw-bold text-white">Completa il tuo ordine</h5>
-                                <small style="color: var(--text-muted);">Inserisci i dati di spedizione</small>
+                                <small style="color: var(--text-muted);">Ricevi il codice via email</small>
                             </div>
                         </div>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="opacity:0.5;"></button>
@@ -703,7 +702,7 @@
                             color: var(--text-muted);
                             text-transform: uppercase;
                             margin-bottom: 0.5rem;
-                        ">Indirizzo di spedizione</label>
+                        ">Email per la ricezione del codice</label>
                         <div id="checkout-input-wrapper" style="
                             background: rgba(15,23,42,0.4);
                             border: 1px solid var(--glass-border);
@@ -714,30 +713,26 @@
                             gap: 12px;
                             transition: all 0.3s;
                         ">
-                            <i class="fas fa-map-marker-alt mt-1" style="color: var(--text-muted);"></i>
-                            <textarea
+                            <i class="fas fa-envelope mt-1" style="color: var(--text-muted);"></i>
+                            <input
+                                type="email"
                                 id="checkout-address-input"
-                                placeholder="Es: Via Roma 1, 00100 Roma RM"
-                                rows="2"
+                                placeholder="nome@esempio.it"
                                 style="
                                     background: transparent;
                                     border: none;
                                     color: var(--text-main);
                                     width: 100%;
                                     outline: none;
-                                    resize: none;
-                                    font-family: inherit;
-                                    font-size: 0.95rem;
-                                    line-height: 1.5;
                                 "
-                            ></textarea>
+                            >
                         </div>
                         <p id="checkout-addr-error" style="
                             color: #ef4444;
                             font-size: 0.8rem;
                             margin-top: 0.4rem;
                             display: none;
-                        "><i class="fas fa-exclamation-circle me-1"></i>Inserisci un indirizzo valido</p>
+                        "><i class="fas fa-exclamation-circle me-1"></i>Inserisci un indirizzo email valido</p>
                     </div>
 
                     <!-- Footer -->

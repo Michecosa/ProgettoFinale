@@ -39,14 +39,10 @@ public class OrdineController {
         return ordineService.trovaPerID(id);
     }
 
-    // Endpoint per creare un nuovo ordine, con indirizzo e data di consegna
-    // opzionale
     @PostMapping
     public Ordine create(@RequestParam String indirizzo,
-            @RequestParam(required = false) LocalDate consegna,
             Authentication authentication) {
-        return ordineService.creaOrdine(authentication.getName(), indirizzo,
-                consegna != null ? consegna : LocalDate.now().plusDays(3));
+        return ordineService.creaOrdine(authentication.getName(), indirizzo);
     }
 
     // Endpoint per aggiornare un ordine esistente tramite ID

@@ -87,11 +87,10 @@ public class EmailNotificationObserver implements OrderObserver, UserObserver, R
             String content = "<p>Gentile <strong>" + ordine.getUtente().getUsername() + "</strong>,</p>" +
                              "<p>Il tuo ordine &egrave; stato ricevuto con successo!</p>" +
                              "<div style='background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1);'>" +
-                             "<p style='margin: 0;'><strong>Indirizzo di consegna:</strong> " + ordine.getIndirizzo() + "</p>" +
-                             "<p style='margin: 10px 0 0 0;'><strong>Data prevista:</strong> " + ordine.getConsegna() + "</p>" +
+                             "<p style='margin: 0;'><strong>Email di ricezione codice:</strong> " + ordine.getIndirizzo() + "</p>" +
                              "<p style='margin: 10px 0 0 0; font-size: 1.2rem;'><strong>Totale: € " + String.format("%.2f", ordine.getTotale()) + "</strong></p>" +
                              "</div>" +
-                             "<p>Riceverai un'ulteriore email non appena il tuo ordine verr&agrave; spedito.</p>";
+                             "<p>Riceverai il tuo codice digitale a breve all'indirizzo indicato.</p>";
             
             helper.setText(getHtmlTemplate("Grazie per il tuo Acquisto!", content), true);
 

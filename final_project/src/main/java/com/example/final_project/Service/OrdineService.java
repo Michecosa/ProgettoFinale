@@ -80,7 +80,7 @@ public class OrdineService implements OrderSubject {
     // se il carrello è vuoto lancia un'eccezione, restituisce l'ordine creato con
     // l'ID generato
     @Transactional
-    public Ordine creaOrdine(String username, String indirizzo, LocalDate consegna) {
+    public Ordine creaOrdine(String username, String indirizzo) {
         Utente utente = utenteRepository.findByUsername(username);
         if (utente == null)
             throw new RuntimeException("Utente non trovato: " + username);
@@ -93,7 +93,7 @@ public class OrdineService implements OrderSubject {
         Ordine ordine = new Ordine();
         ordine.setUtente(utente);
         ordine.setIndirizzo(indirizzo);
-        ordine.setConsegna(consegna);
+        ordine.setConsegna(LocalDate.now());
         ordine.setData(LocalDate.now());
         ordine.setPagato(false);
 
@@ -120,9 +120,6 @@ public class OrdineService implements OrderSubject {
         Ordine esistente = trovaPerID(id);
         if (datiAggiornati.getIndirizzo() != null && !datiAggiornati.getIndirizzo().isBlank()) {
             esistente.setIndirizzo(datiAggiornati.getIndirizzo());
-        }
-        if (datiAggiornati.getConsegna() != null) {
-            esistente.setConsegna(datiAggiornati.getConsegna());
         }
         esistente.setPagato(datiAggiornati.isPagato());
         return ordineRepository.save(esistente);
