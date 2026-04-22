@@ -215,18 +215,6 @@
     let adminProducts = [];
     let adminCategories = [];
 
-    const isAdmin = () => {
-        try {
-            const token = localStorage.getItem('jwt_token');
-            if (!token) return false;
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            const roles = (payload.roles || '').split(',').map(r => r.trim());
-            return roles.includes('ROLE_ADMIN');
-        } catch {
-            return false;
-        }
-    };
-
     window.showAdmin = () => {
         const token = localStorage.getItem('jwt_token');
         if (!token || !isAdmin()) {
