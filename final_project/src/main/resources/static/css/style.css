@@ -992,3 +992,14 @@ body {
     font-size: 0.9rem;
     color: var(--text-main);
 }
+.status-badge-available {
+    background: rgba(34, 197, 94, 0.15) !important;
+    color: #22c55e !important;
+    border: 1px solid rgba(34, 197, 94, 0.35) !important;
+}
+
+.status-badge-unavailable {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+}

@@ -276,7 +276,7 @@
                 </td>
                 <td><span class="text-primary fw-bold">€ ${p.prezzo.toFixed(2)}</span></td>
                 <td>
-                    <span class="badge ${p.disponibile ? 'role-badge-user' : 'role-badge-admin'} rounded-pill px-3">
+                    <span class="badge ${p.disponibile ? 'status-badge-available' : 'status-badge-unavailable'} rounded-pill px-3">
                         <i class="fas ${p.disponibile ? 'fa-check-circle' : 'fa-times-circle'} me-1"></i>
                         ${p.disponibile ? 'Disponibile' : 'Esaurito'}
                     </span>
