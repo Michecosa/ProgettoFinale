@@ -20,6 +20,7 @@
 
 ---
 
+<a name="caratteristiche-principali"></a>
 ## ✨ Caratteristiche Principali
 
 ### 🔒 Autenticazione & Sicurezza
@@ -43,6 +44,7 @@
 
 ---
 
+<a name="tech-stack"></a>
 ## 🛠️ Tech Stack
 
 | Componente | Tecnologie |
@@ -57,6 +59,7 @@
 
 ---
 
+<a name="design-patterns"></a>
 ## 📐 Design Patterns
 Il progetto implementa diversi pattern architetturali per garantire scalabilità e manutenibilità:
 
@@ -66,6 +69,7 @@ Il progetto implementa diversi pattern architetturali per garantire scalabilità
 
 ---
 
+<a name="architettura-del-progetto"></a>
 ## 📂 Architettura del Progetto
 
 ```text
@@ -86,6 +90,7 @@ ProgettoFinale/
 
 ---
 
+<a name="installazione-e-setup"></a>
 ## 🚀 Installazione e Setup
 
 ### Prerequisiti
@@ -120,6 +125,7 @@ L'applicazione sarà disponibile all'indirizzo: `http://localhost:8080`
 
 ---
 
+<a name="configurazione"></a>
 ## ⚙️ Configurazione
 
 ### PayPal Sandbox
@@ -133,6 +139,7 @@ paypal:
 
 ---
 
+<a name="team-di-sviluppo"></a>
 ## 👥 Team di Sviluppo
 
 <table>
@@ -141,14 +148,12 @@ paypal:
       <a href="https://github.com/DonatoMorra">
         <img src="https://github.com/DonatoMorra.png" width="100" style="border-radius:50%"/><br/>
         <b>Donato Morra</b><br>
-        <sub>Lead Developer</sub>
       </a>
     </td>
     <td align="center">
       <a href="https://github.com/Michecosa">
         <img src="https://github.com/Michecosa.png" width="100" style="border-radius:50%"/><br/>
         <b>Michela Della Gatta</b><br>
-        <sub>Full-Stack Developer</sub>
       </a>
     </td>
   </tr>
