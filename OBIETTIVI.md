@@ -19,10 +19,12 @@
 # Obiettivi Giornalieri - 22 Aprile 2026
 
 ## 4. Sistema di Pagamento & Checkout 💳
-- [ ] **Mock Payment Service**: Creare un `PagamentoService` che accetti finti dati di una carta di credito e restituisca un esito (successo/fallimento).
-- [ ] **Integrazione Checkout**: Modificare `OrdineService.creaOrdine` per includere la chiamata al servizio di pagamento e settare `ordine.setPagato(true)` solo in caso di esito positivo.
-- [ ] **DTO per il Checkout**: Creare un `CheckoutRequest` che contenga l'indirizzo di spedizione e i dati (finti) della carta, per non passare tutto come parametri sparsi.
+- [x] **Integrazione PayPal (Sandbox)**: Implementato `PayPalService` per la comunicazione con le REST API di PayPal e `PaymentController` per gestire il flusso di approvazione.
+- [x] **Checkout Flow**: Creato il modal di checkout nel frontend che reindirizza l'utente a PayPal e gestisce il ritorno sicuro.
+- [x] **Creazione Ordine Post-Pagamento**: L'ordine viene ora creato nel database solo dopo la conferma di pagamento avvenuto, garantendo la coerenza dei dati.
 
 
 ## 5. Esperienza Utente (UX) 🚀
-- [ ] **Feedback Errori**: Se il pagamento fallisce, restituire un messaggio chiaro all'utente (es. "Fondi insufficienti" o "Carta scaduta") invece di un errore generico 500
+- [x] **Feedback Real-time**: Implementati toast di notifica per segnalare il successo, l'annullamento o eventuali errori durante la transazione PayPal.
+- [x] **Automazione Download**: L'integrazione tra il sistema di pagamento e l'Observer garantisce l'invio istantaneo dell'email con i link di download al termine dell'acquisto.
+- [ ] **Visualizzazione Stato Pagato**: Mostrare chiaramente lo stato "Pagato" nell'area ordini dell'utente per migliorare la trasparenza.

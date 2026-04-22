@@ -49,6 +49,7 @@ Un sistema e-commerce per prodotti digitali (snippet, progetti, database) con au
 | Security | Spring Security + JWT (stateless, 24h expiry) |
 | Persistence | Spring Data JPA / Hibernate, MySQL |
 | Email | Spring Mail (SMTP Gmail, template HTML) |
+| Payments | PayPal REST SDK |
 | Pattern | Observer (notifiche email) |
 | Frontend | HTML/CSS/JS vanilla (SPA) |
 
@@ -84,6 +85,18 @@ Implementate tramite **pattern Observer** (`EmailNotificationObserver`):
 | Registrazione | Benvenuto in CodeShop con riepilogo account |
 | Cambio password | Avviso di modifica credenziali |
 | Completamento ordine | Conferma acquisto + link di download per ogni prodotto digitale |
+
+### Integrazione Pagamenti (PayPal)
+È stato implementato un sistema di checkout sicuro tramite **PayPal REST API**:
+- **Checkout Dinamico**: Il backend genera un `approvalUrl` di PayPal in base al totale del carrello.
+- **Flusso di Approvazione**: L'utente viene reindirizzato su PayPal per confermare il pagamento e poi riportato sull'applicazione (`success` o `cancel`).
+- **Verifica Lato Server**: Al ritorno dall'approvazione, il backend esegue il pagamento tramite il `paymentId` e il `PayerID` per garantirne la validità prima di confermare l'ordine.
+
+| Endpoint | Metodo | Descrizione |
+| :--- | :--- | :--- |
+| `/payment/create` | `POST` | Inizia il processo di pagamento e restituisce l'URL di approvazione |
+| `/payment/success` | `GET` | Endpoint di callback per pagamenti completati con successo |
+| `/payment/cancel` | `GET` | Endpoint di callback per pagamenti annullati |
 
 ### Interfaccia
 - Single Page Application con navigazione dinamica
@@ -131,12 +144,15 @@ ProgettoFinale/
         ├── main/
         │   ├── java/com/example/final_project/
         │   │   ├── FinalProjectApplication.java
+        │   │   ├── Config/                 # Configurazioni (PayPal, ecc.)
+        │   │   │   └── PayPalConfig.java
         │   │   ├── Controller/             # REST Controllers
         │   │   │   ├── AuthController.java
         │   │   │   ├── CarrelloController.java
         │   │   │   ├── CategoriaController.java
         │   │   │   ├── ItemController.java
         │   │   │   ├── OrdineController.java
+        │   │   │   ├── PaymentController.java      # Gestione redirect e API PayPal
         │   │   │   ├── ProdottoController.java
         │   │   │   └── UtenteController.java
         │   │   ├── Model/                  # Entità JPA
@@ -160,6 +176,7 @@ ProgettoFinale/
         │   │   │   ├── CategoriaService.java
         │   │   │   ├── ItemService.java
         │   │   │   ├── OrdineService.java
+        │   │   │   ├── PayPalService.java          # Logica di creazione ed esecuzione pagamenti
         │   │   │   ├── ProdottoService.java
         │   │   │   └── UtenteService.java
         │   │   ├── Security/               # JWT & Spring Security
@@ -193,3 +210,20 @@ ProgettoFinale/
             └── java/com/example/final_project/
                 └── FinalProjectApplicationTests.java
 ```
+
+---
+
+## Configurazione PayPal
+
+Per far funzionare l'integrazione, è necessario configurare le credenziali sandbox/live nel file `application.yaml`:
+
+```yaml
+paypal:
+  client-id: ${PAYPAL_CLIENT_ID}
+  client-secret: ${PAYPAL_CLIENT_SECRET}
+  mode: sandbox # o 'live'
+  currency: EUR
+  return-url: http://localhost:8080/payment/success
+  cancel-url: http://localhost:8080/payment/cancel
+```
+
