@@ -39,6 +39,12 @@ public class ProdottoService {
         if (datiAggiornati.getPrezzo() >= 0) {
             esistente.setPrezzo(datiAggiornati.getPrezzo());
         }
+        // Aggiornamento disponibilità
+        esistente.setDisponibile(datiAggiornati.isDisponibile());
+
+        if (datiAggiornati.getLinkDownload() != null) {
+            esistente.setLinkDownload(datiAggiornati.getLinkDownload());
+        }
         if (datiAggiornati.getCategorie() != null) {
             esistente.setCategorie(datiAggiornati.getCategorie());
         }
