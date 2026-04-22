@@ -259,22 +259,21 @@
         if (label) label.textContent = `Catalogo Prodotti (${prods.length})`;
 
         if (prods.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted">Nessun prodotto nel catalogo</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-white">Nessun prodotto nel catalogo</td></tr>';
             return;
         }
 
         tbody.innerHTML = prods.map(p => `
             <tr>
-                <td class="text-muted px-4">#${p.id}</td>
+                <td class="text-white px-4">#${p.id}</td>
                 <td class="fw-bold text-white">${p.nome}</td>
                 <td class="text-primary fw-bold">€ ${p.prezzo.toFixed(2)}</td>
-                <td class="text-white">${p.stock}</td>
                 <td>
                     <span class="badge ${p.disponibile ? 'bg-success' : 'bg-danger'} rounded-pill px-3">
                         ${p.disponibile ? 'Sì' : 'No'}
                     </span>
                 </td>
-                <td class="text-muted small">${(p.categorie || []).map(c => c.nome).join(', ') || '—'}</td>
+                <td class="text-white small">${(p.categorie || []).map(c => c.nome).join(', ') || '—'}</td>
                 <td>
                     <button class="btn btn-sm btn-outline-primary me-2 rounded-pill" onclick="openProductModal(${p.id})">
                         <i class="fas fa-edit me-1"></i>Modifica
@@ -296,7 +295,6 @@
         document.getElementById('pm-id').value = product ? product.id : '';
         document.getElementById('pm-nome').value = product ? product.nome : '';
         document.getElementById('pm-prezzo').value = product ? product.prezzo : '';
-        document.getElementById('pm-stock').value = product ? product.stock : 0;
         document.getElementById('pm-link').value = product ? (product.linkDownload || '') : '';
         document.getElementById('pm-disponibile').checked = product ? product.disponibile : true;
 
@@ -321,7 +319,6 @@
         const id = document.getElementById('pm-id').value;
         const nome = document.getElementById('pm-nome').value.trim();
         const prezzo = parseFloat(document.getElementById('pm-prezzo').value);
-        const stock = parseInt(document.getElementById('pm-stock').value) || 0;
         const linkDownload = document.getElementById('pm-link').value.trim() || null;
         const disponibile = document.getElementById('pm-disponibile').checked;
         const catSelect = document.getElementById('pm-categorie');
@@ -347,7 +344,7 @@
             const res = await fetch(url, {
                 method,
                 headers: getAuthHeaders(),
-                body: JSON.stringify({ nome, prezzo, stock, disponibile, linkDownload, categorie })
+                body: JSON.stringify({ nome, prezzo, stock: 1, disponibile, linkDownload, categorie })
             });
 
             if (res.ok) {
@@ -425,13 +422,6 @@
                                     <input type="number" id="pm-prezzo" placeholder="0.00" min="0" step="0.01">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="profile-field-label mb-2">Stock</label>
-                                <div class="input-group-custom mb-0">
-                                    <i class="fas fa-warehouse"></i>
-                                    <input type="number" id="pm-stock" placeholder="0" min="0">
-                                </div>
-                            </div>
                             <div class="col-12">
                                 <label class="profile-field-label mb-2">Link Download</label>
                                 <div class="input-group-custom mb-0">
@@ -440,7 +430,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="profile-field-label mb-2">Categorie <small class="text-muted">(Ctrl/Cmd per selezionare più categorie)</small></label>
+                                <label class="profile-field-label mb-2">Categorie <small class="text-white">(Ctrl/Cmd per selezionare più categorie)</small></label>
                                 <select id="pm-categorie" multiple class="form-select bg-dark text-white border-secondary" style="border-radius:12px;min-height:110px;"></select>
                             </div>
                             <div class="col-12 mt-1">
@@ -452,7 +442,7 @@
                         </div>
                     </div>
                     <div class="modal-footer" style="background: rgba(15,23,42,0.4); border-top: 1px solid var(--glass-border); padding: 1.25rem 2rem; gap: 0.75rem;">
-                        <button type="button" data-bs-dismiss="modal" style="background:transparent;border:1px solid var(--glass-border);color:var(--text-muted);border-radius:12px;padding:0.7rem 1.5rem;font-weight:600;cursor:pointer;">Annulla</button>
+                        <button type="button" data-bs-dismiss="modal" style="background:transparent;border:1px solid var(--glass-border);color:var(--text-white);border-radius:12px;padding:0.7rem 1.5rem;font-weight:600;cursor:pointer;">Annulla</button>
                         <button id="pm-save-btn" onclick="saveProduct()" style="background:var(--gradient-primary);border:none;border-radius:12px;padding:0.7rem 2rem;font-weight:700;color:white;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 8px 20px -4px rgba(168,85,247,0.4);">
                             <span id="pm-save-text"><i class="fas fa-save me-2"></i>Salva Prodotto</span>
                             <span id="pm-save-spinner" class="d-none"><span class="spinner-border spinner-border-sm"></span></span>
@@ -613,7 +603,7 @@
         countEl.innerText = filtered.length;
 
         if (filtered.length === 0) {
-            grid.innerHTML = '<div class="col-12 text-center py-5"><h3 class="text-muted">Nessun prodotto trovato</h3></div>';
+            grid.innerHTML = '<div class="col-12 text-center py-5"><h3 class="text-white">Nessun prodotto trovato</h3></div>';
             return;
         }
 
@@ -651,7 +641,7 @@
         const featured = products.slice(0, 4);
 
         if (featured.length === 0) {
-            grid.innerHTML = '<div class="col-12 text-center py-5"><p class="text-muted">Nessun prodotto disponibile al momento</p></div>';
+            grid.innerHTML = '<div class="col-12 text-center py-5"><p class="text-white">Nessun prodotto disponibile al momento</p></div>';
             return;
         }
 
@@ -870,7 +860,7 @@
             // Reset hours to compare only days
             now.setHours(0, 0, 0, 0);
             orderDate.setHours(0, 0, 0, 0);
-            
+
             const diffTime = now - orderDate;
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             const daysLeft = 14 - diffDays;
@@ -919,7 +909,7 @@
                     <div class="flex-shrink-0">
                         ${item.prodotto.linkDownload
                         ? (isExpired && !isAdmin()
-                            ? `<span class="text-muted small">Accesso terminato</span>`
+                            ? `<span class="text-white small">Accesso terminato</span>`
                             : `<a href="${item.prodotto.linkDownload}" class="btn-track-order" target="_blank" rel="noopener noreferrer">Scarica</a>`)
                         : `<span class="order-item-meta">N/D</span>`
                     }
@@ -975,7 +965,7 @@
                             </div>
                             <div>
                                 <h5 class="mb-0 fw-bold text-white">Completa il tuo ordine</h5>
-                                <small style="color: var(--text-muted);">Ricevi il codice via email</small>
+                                <small style="color: var(--text-white);">Ricevi il codice via email</small>
                             </div>
                         </div>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="opacity:0.5;"></button>
@@ -992,7 +982,7 @@
                             margin-bottom: 1.5rem;
                         ">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span style="color: var(--text-muted); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Riepilogo</span>
+                                <span style="color: var(--text-white); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Riepilogo</span>
                                 <span id="checkout-total-display" style="
                                     background: var(--gradient-primary);
                                     -webkit-background-clip: text;
@@ -1009,7 +999,7 @@
                             font-size: 0.72rem;
                             font-weight: 700;
                             letter-spacing: 1px;
-                            color: var(--text-muted);
+                            color: var(--text-white);
                             text-transform: uppercase;
                             margin-bottom: 0.5rem;
                         ">Email per la ricezione del codice</label>
@@ -1023,7 +1013,7 @@
                             gap: 12px;
                             transition: all 0.3s;
                         ">
-                            <i class="fas fa-envelope mt-1" style="color: var(--text-muted);"></i>
+                            <i class="fas fa-envelope mt-1" style="color: var(--text-white);"></i>
                             <input
                                 type="email"
                                 id="checkout-address-input"
@@ -1058,7 +1048,7 @@
                             style="
                                 background: transparent;
                                 border: 1px solid var(--glass-border);
-                                color: var(--text-muted);
+                                color: var(--text-white);
                                 border-radius: 12px;
                                 padding: 0.7rem 1.5rem;
                                 font-weight: 600;
@@ -1066,7 +1056,7 @@
                                 transition: all 0.3s;
                             "
                             onmouseover="this.style.borderColor='rgba(255,255,255,0.3)';this.style.color='white';"
-                            onmouseout="this.style.borderColor='var(--glass-border)';this.style.color='var(--text-muted)';"
+                            onmouseout="this.style.borderColor='var(--glass-border)';this.style.color='var(--text-white)';"
                         >Annulla</button>
                         <button
                             id="checkout-confirm-btn"
@@ -1127,8 +1117,8 @@
         if (preview) {
             preview.innerHTML = items.map(item => `
                 <div class="d-flex justify-content-between align-items-center py-1" style="border-top: 1px solid rgba(255,255,255,0.05);">
-                    <span style="color: var(--text-main); font-size: 0.88rem;">${item.prodotto.nome} <span style="color:var(--text-muted);">x${item.qtn}</span></span>
-                    <span style="color: var(--text-muted); font-size: 0.88rem;">€ ${(item.prodotto.prezzo * item.qtn).toFixed(2)}</span>
+                    <span style="color: var(--text-main); font-size: 0.88rem;">${item.prodotto.nome} <span style="color:var(--text-white);">x${item.qtn}</span></span>
+                    <span style="color: var(--text-white); font-size: 0.88rem;">€ ${(item.prodotto.prezzo * item.qtn).toFixed(2)}</span>
                 </div>
             `).join('');
         }

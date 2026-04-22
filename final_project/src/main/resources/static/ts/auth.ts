@@ -191,7 +191,7 @@ type ToastType = 'success' | 'error' | 'info';
         if (!container || !currentCart) return;
 
         const items = currentCart.items || [];
-        
+
         // Update badge
         if (items.length > 0) {
             badge?.classList.remove('d-none');
@@ -208,7 +208,7 @@ type ToastType = 'success' | 'error' | 'info';
         if (totalEl) totalEl.innerText = `€ ${total.toFixed(2)}`;
 
         if (items.length === 0) {
-            container.innerHTML = '<p class="text-center text-muted mt-5">Il tuo carrello è vuoto.</p>';
+            container.innerHTML = '<p class="text-center text-white mt-5">Il tuo carrello è vuoto.</p>';
             return;
         }
 
@@ -242,7 +242,7 @@ type ToastType = 'success' | 'error' | 'info';
             const loader = document.getElementById('login-loader');
 
             if (loader) loader.style.display = 'block';
-            
+
             try {
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
@@ -273,7 +273,7 @@ type ToastType = 'success' | 'error' | 'info';
             const loader = document.getElementById('reg-loader');
 
             if (loader) loader.style.display = 'block';
-            
+
             try {
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
@@ -344,4 +344,4 @@ type ToastType = 'success' | 'error' | 'info';
     });
 
 })();
-export {};
+export { };

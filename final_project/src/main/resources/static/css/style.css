@@ -6,7 +6,7 @@
     --bg-main: #0f172a;
     --bg-surface: #1e293b;
     --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
+    --text-white: #94a3b8;
     --glass-bg: rgba(30, 41, 59, 0.7);
     --glass-border: rgba(255, 255, 255, 0.1);
     --gradient-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
@@ -289,7 +289,7 @@ body {
     text-transform: uppercase;
     font-size: 0.7rem;
     letter-spacing: 1px;
-    color: var(--text-muted);
+    color: var(--text-white);
     margin-bottom: 0.5rem;
     font-weight: 600;
 }
@@ -325,7 +325,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
     border-radius: 50px;
-    color: var(--text-muted);
+    color: var(--text-white);
     padding: 6px 18px;
     font-size: 0.85rem;
     font-family: 'Outfit', sans-serif;
@@ -377,7 +377,7 @@ body {
 }
 
 .input-group-custom i {
-    color: var(--text-muted);
+    color: var(--text-white);
     margin-right: 15px;
 }
 
@@ -459,6 +459,7 @@ body {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -487,8 +488,13 @@ body {
     box-shadow: var(--card-shadow);
 }
 
-.toast-success { border-left: 4px solid #22c55e; }
-.toast-error { border-left: 4px solid #ef4444; }
+.toast-success {
+    border-left: 4px solid #22c55e;
+}
+
+.toast-error {
+    border-left: 4px solid #ef4444;
+}
 
 /* Orders */
 .order-card {
@@ -521,7 +527,7 @@ body {
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 1px;
-    color: var(--text-muted);
+    color: var(--text-white);
     margin-bottom: 2px;
 }
 
@@ -549,7 +555,7 @@ body {
 
 .order-item-meta {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--text-white);
 }
 
 .order-delivery-col {
@@ -578,6 +584,7 @@ body {
 .d-none {
     display: none !important;
 }
+
 /* ===== Profile Section ===== */
 .profile-avatar-card {
     background: var(--bg-surface);
@@ -620,7 +627,7 @@ body {
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.8px;
-    color: var(--text-muted);
+    color: var(--text-white);
     text-transform: uppercase;
     margin-top: 2px;
 }
@@ -657,7 +664,7 @@ body {
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 1px;
-    color: var(--text-muted);
+    color: var(--text-white);
     text-transform: uppercase;
     margin-bottom: 4px;
     padding-left: 0.5rem;
@@ -700,7 +707,7 @@ body {
 }
 
 .footer-links a {
-    color: var(--text-muted);
+    color: var(--text-white);
     text-decoration: none;
     transition: all 0.3s;
     font-size: 0.95rem;
