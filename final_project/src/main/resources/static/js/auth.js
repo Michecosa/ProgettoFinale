@@ -314,19 +314,18 @@
         document.getElementById('pm-link').value = product ? (product.linkDownload || '') : '';
         document.getElementById('pm-disponibile').checked = product ? product.disponibile : true;
 
-        const catSelect = document.getElementById('pm-categorie');
-        catSelect.innerHTML = adminCategories.map(c =>
-            `<option value="${c.id}">${c.nome}</option>`
-        ).join('');
+        const catContainer = document.getElementById('pm-categorie-container');
+        const selectedIds = product && product.categorie ? product.categorie.map(c => c.id) : [];
 
-        if (product && product.categorie) {
-            const selectedIds = product.categorie.map(c => c.id);
-            Array.from(catSelect.options).forEach(opt => {
-                opt.selected = selectedIds.includes(parseInt(opt.value));
-            });
-        } else {
-            Array.from(catSelect.options).forEach(opt => opt.selected = false);
-        }
+        catContainer.innerHTML = adminCategories.map(c => `
+            <div class="col-md-4 col-sm-6">
+                <div class="category-checkbox-card ${selectedIds.includes(c.id) ? 'active' : ''}" onclick="toggleCategoryCheckbox(this)">
+                    <input type="checkbox" name="pm-category" value="${c.id}" data-name="${c.nome}" 
+                        ${selectedIds.includes(c.id) ? 'checked' : ''} onclick="event.stopPropagation()">
+                    <label>${c.nome}</label>
+                </div>
+            </div>
+        `).join('');
 
         new bootstrap.Modal(document.getElementById('productModal')).show();
     };
@@ -337,14 +336,16 @@
         const prezzo = parseFloat(document.getElementById('pm-prezzo').value);
         const linkDownload = document.getElementById('pm-link').value.trim() || null;
         const disponibile = document.getElementById('pm-disponibile').checked;
-        const catSelect = document.getElementById('pm-categorie');
-        const categorie = Array.from(catSelect.selectedOptions).map(opt => ({
-            id: parseInt(opt.value),
-            nome: opt.textContent.trim()
+        const checkboxes = document.querySelectorAll('input[name="pm-category"]:checked');
+        const categorie = Array.from(checkboxes).map(cb => ({
+            id: parseInt(cb.value),
+            nome: cb.getAttribute('data-name')
         }));
 
         if (!nome) { showToast('Il nome è obbligatorio', 'error'); return; }
         if (isNaN(prezzo) || prezzo < 0) { showToast('Inserisci un prezzo valido', 'error'); return; }
+        if (!linkDownload) { showToast('Il link sorgente/download è obbligatorio', 'error'); return; }
+        if (categorie.length === 0) { showToast('Seleziona almeno una categoria', 'error'); return; }
 
         const saveText = document.getElementById('pm-save-text');
         const saveSpinner = document.getElementById('pm-save-spinner');
@@ -405,62 +406,64 @@
         div.innerHTML = `
         <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content" style="
-                    background: var(--bg-surface);
-                    border: 1px solid var(--glass-border);
-                    border-radius: 24px;
-                    box-shadow: 0 25px 60px -10px rgba(0,0,0,0.6);
-                    overflow: hidden;
-                ">
-                    <div class="modal-header" style="background: rgba(15,23,42,0.6); border-bottom: 1px solid var(--glass-border); padding: 1.5rem 2rem;">
+                <div class="modal-content premium-modal">
+                    <div class="modal-header">
                         <div class="d-flex align-items-center gap-3">
-                            <div style="width:44px;height:44px;background:var(--gradient-primary);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">
-                                <i class="fas fa-box text-white"></i>
+                            <div class="header-icon-box">
+                                <i class="fas fa-box"></i>
                             </div>
-                            <h5 class="modal-title fw-bold text-white mb-0" id="product-modal-title">Prodotto</h5>
+                            <div>
+                                <h5 class="modal-title text-white mb-0" id="product-modal-title">Gestione Prodotto</h5>
+                                <p class="text-white small opacity-75 mb-0">Inserisci i dettagli tecnici della risorsa</p>
+                            </div>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="opacity:0.5;"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body p-4">
+                    <div class="modal-body">
                         <input type="hidden" id="pm-id">
-                        <div class="row g-3">
+                        <div class="row g-4">
                             <div class="col-12">
-                                <label class="profile-field-label mb-2">Nome *</label>
-                                <div class="input-group-custom mb-0">
+                                <label class="profile-field-label">Nome Risorsa *</label>
+                                <div class="input-group-custom">
                                     <i class="fas fa-tag"></i>
-                                    <input type="text" id="pm-nome" placeholder="Nome del prodotto">
+                                    <input type="text" id="pm-nome" placeholder="Es. Algoritmo di Ordinamento Java">
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="profile-field-label mb-2">Prezzo (€) *</label>
-                                <div class="input-group-custom mb-0">
+                                <label class="profile-field-label">Prezzo di Vendita (€) *</label>
+                                <div class="input-group-custom">
                                     <i class="fas fa-euro-sign"></i>
                                     <input type="number" id="pm-prezzo" placeholder="0.00" min="0" step="0.01">
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="profile-field-label mb-2">Link Download</label>
-                                <div class="input-group-custom mb-0">
-                                    <i class="fas fa-link"></i>
-                                    <input type="text" id="pm-link" placeholder="https://...">
+                            <div class="col-md-6">
+                                <label class="profile-field-label">Stato Disponibilità</label>
+                                <div class="d-flex align-items-center h-100 mt-2">
+                                    <div class="form-check form-switch ps-5">
+                                        <input class="form-check-input" type="checkbox" id="pm-disponibile" checked>
+                                        <label class="form-check-label text-white ms-2" for="pm-disponibile">Attivo per la vendita</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="profile-field-label mb-2">Categorie <small class="text-white">(Ctrl/Cmd per selezionare più categorie)</small></label>
-                                <select id="pm-categorie" multiple class="form-select bg-dark text-white border-secondary" style="border-radius:12px;min-height:110px;"></select>
+                                <label class="profile-field-label">Link Sorgente/Download</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-link"></i>
+                                    <input type="text" id="pm-link" placeholder="https://github.com/...">
+                                </div>
                             </div>
-                            <div class="col-12 mt-1">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="pm-disponibile" checked>
-                                    <label class="form-check-label text-white" for="pm-disponibile">Prodotto disponibile alla vendita</label>
+                            <div class="col-12">
+                                <label class="profile-field-label">Categorie di Riferimento *</label>
+                                <div id="pm-categorie-container" class="row g-2 mt-1">
+                                    <!-- Checkboxes will be injected here -->
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer" style="background: rgba(15,23,42,0.4); border-top: 1px solid var(--glass-border); padding: 1.25rem 2rem; gap: 0.75rem;">
-                        <button type="button" data-bs-dismiss="modal" style="background:transparent;border:1px solid var(--glass-border);color:var(--text-white);border-radius:12px;padding:0.7rem 1.5rem;font-weight:600;cursor:pointer;">Annulla</button>
-                        <button id="pm-save-btn" onclick="saveProduct()" style="background:var(--gradient-primary);border:none;border-radius:12px;padding:0.7rem 2rem;font-weight:700;color:white;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 8px 20px -4px rgba(168,85,247,0.4);">
-                            <span id="pm-save-text"><i class="fas fa-save me-2"></i>Salva Prodotto</span>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">Annulla</button>
+                        <button id="pm-save-btn" onclick="saveProduct()" class="btn-primary-custom w-auto px-5">
+                            <span id="pm-save-text"><i class="fas fa-save me-2"></i>Salva Modifiche</span>
                             <span id="pm-save-spinner" class="d-none"><span class="spinner-border spinner-border-sm"></span></span>
                         </button>
                     </div>
@@ -468,6 +471,12 @@
             </div>
         </div>`;
         document.body.appendChild(div.firstElementChild);
+    };
+
+    window.toggleCategoryCheckbox = (card) => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        checkbox.checked = !checkbox.checked;
+        card.classList.toggle('active', checkbox.checked);
     };
 
 
