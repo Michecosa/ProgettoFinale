@@ -173,6 +173,27 @@ body {
     color: #ef4444;
 }
 
+/* Newsletter Modals Styling */
+#newsletterModal .modal-content, 
+#newsletterErrorModal .modal-content {
+    background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.12), transparent 300px),
+                var(--bg-surface) !important;
+}
+
+#newsletterModal .header-icon-box {
+    box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#newsletterModal:hover .header-icon-box {
+    transform: rotate(12deg) scale(1.1);
+}
+
+#newsletterErrorModal .header-icon-box {
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+    box-shadow: 0 15px 35px -5px rgba(239, 68, 68, 0.4);
+}
+
 /* Hero Section */
 .hero-section {
     position: relative;

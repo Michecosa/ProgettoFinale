@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <style>
         .contact-social-btn {
@@ -778,14 +779,78 @@
         window.setProfileRoleBadge = setProfileRoleBadge;
 
         function handleNewsletter() {
-            const email = document.getElementById('newsletter-email').value;
+            const emailInput = document.getElementById('newsletter-email');
+            const email = emailInput.value;
             if (email && email.includes('@')) {
-                window.location.href = "https://images-ext-1.discordapp.net/external/2ZyFUY5pFFXt_cXDkYyaDb8LL_q9wRbCmehYnJUuBLQ/https/media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2lyN3JoZTZzbzA1cm5lbDVyd2hueDZpMTY5NGt5Y3FtZGx5MWpyMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qZgHBlenHa1zKqy6Zn/giphy.gif";
+                const modalEl = document.getElementById('newsletterModal');
+                if (modalEl) {
+                    new bootstrap.Modal(modalEl).show();
+                    emailInput.value = '';
+                }
             } else {
-                alert('Per favore inserisci un email valida.');
+                const errorModalEl = document.getElementById('newsletterErrorModal');
+                if (errorModalEl) {
+                    new bootstrap.Modal(errorModalEl).show();
+                } else {
+                    window.showToast('Per favore inserisci un email valida.', 'error');
+                }
             }
         }
+        function confirmNewsletter() {
+            // Apre il link in una nuova scheda per "scaricare" il file senza lasciare la pagina
+            window.open("https://images-ext-1.discordapp.net/external/2ZyFUY5pFFXt_cXDkYyaDb8LL_q9wRbCmehYnJUuBLQ/https/media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2lyN3JoZTZzbzA1cm5lbDVyd2hueDZpMTY5NGt5Y3FtZGx5MWpyMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qZgHBlenHa1zKqy6Zn/giphy.gif", "_blank");
+            
+            // Chiude il modal
+            const modalEl = document.getElementById('newsletterModal');
+            const bsModal = bootstrap.Modal.getInstance(modalEl);
+            if (bsModal) bsModal.hide();
+        }
     </script>
+    <!-- Newsletter Success Modal -->
+    <div class="modal fade" id="newsletterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content premium-modal animate__animated animate__zoomIn">
+                <div class="modal-body p-5 text-center">
+                    <div class="mb-4">
+                        <div class="header-icon-box mx-auto" style="width: 80px; height: 80px; font-size: 2.5rem;">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                    </div>
+                    <h2 class="fw-bold text-white mb-3">Sei a bordo!</h2>
+                    <p class="text-white opacity-75 mb-4" style="font-size: 1.1rem;">
+                        Grazie per esserti iscritto alla nostra newsletter. <br>
+                        Riceverai presto le migliori risorse direttamente nella tua inbox.
+                    </p>
+                    <button type="button" class="btn-primary-custom w-auto px-5 py-3" onclick="confirmNewsletter()">
+                        Fantastico!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Error Modal -->
+    <div class="modal fade" id="newsletterErrorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content premium-modal animate__animated animate__shakeX" style="border-color: rgba(239, 68, 68, 0.3) !important;">
+                <div class="modal-body p-5 text-center">
+                    <div class="mb-4">
+                        <div class="header-icon-box mx-auto" style="width: 80px; height: 80px; font-size: 2.5rem; background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); box-shadow: 0 15px 35px -5px rgba(239, 68, 68, 0.4);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                    <h2 class="fw-bold text-white mb-3">Ops! Qualcosa non va</h2>
+                    <p class="text-white opacity-75 mb-4" style="font-size: 1.1rem;">
+                        L'indirizzo email inserito non sembra essere valido. <br>
+                        Controlla che non ci siano errori e riprova!
+                    </p>
+                    <button type="button" class="btn btn-outline-light rounded-pill px-5 py-2 border-opacity-25" data-bs-dismiss="modal">
+                        Ho capito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
