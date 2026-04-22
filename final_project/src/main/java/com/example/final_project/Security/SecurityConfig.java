@@ -70,6 +70,8 @@ public class SecurityConfig {
 								.requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
 								.requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
 								.requestMatchers("/api/users/**").hasRole("ADMIN")
+								.requestMatchers(HttpMethod.GET, "/payment/success").permitAll()
+								.requestMatchers(HttpMethod.GET, "/payment/cancel").permitAll()
 								.anyRequest().authenticated())
 				.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 

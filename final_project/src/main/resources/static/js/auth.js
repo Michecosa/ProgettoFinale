@@ -787,7 +787,7 @@
                             onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 28px -4px rgba(168,85,247,0.5)';"
                             onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 20px -4px rgba(168,85,247,0.4)';"
                         >
-                            <span id="checkout-btn-text"><i class="fas fa-lock me-2"></i>Conferma ordine</span>
+                            <span id="checkout-btn-text"><i class="fab fa-paypal me-2"></i>Paga con PayPal</span>
                             <span id="checkout-btn-spinner" class="d-none">
                                 <span class="spinner-border spinner-border-sm" role="status"></span>
                                 <span class="ms-1">Elaborazione...</span>
@@ -847,7 +847,7 @@
         const indirizzo = document.getElementById('checkout-address-input')?.value?.trim();
         const errEl = document.getElementById('checkout-addr-error');
 
-        if (!indirizzo) {
+        if (!indirizzo || !indirizzo.includes('@')) {
             if (errEl) errEl.style.display = 'block';
             return;
         }
@@ -861,38 +861,29 @@
         if (confirmBtn) confirmBtn.disabled = true;
 
         try {
-            const response = await fetch(`/api/orders?indirizzo=${encodeURIComponent(indirizzo)}`, {
-                method: 'POST',
-                headers: getAuthHeaders()
-            });
+            const items = currentCart?.items || [];
+            const total = items.reduce((acc, i) => acc + (i.prodotto.prezzo * i.qtn), 0);
+            const description = `Ordine CodeShop (${items.length} articoli)`;
+
+            // Salva l'email: ci serve quando PayPal ci rimanda indietro
+            sessionStorage.setItem('checkout_email', indirizzo);
+
+            const response = await fetch(
+                `/payment/create?amount=${total.toFixed(2)}&description=${encodeURIComponent(description)}`,
+                { method: 'POST', headers: getAuthHeaders() }
+            );
 
             if (response.ok) {
-                // Close modal
-                const modalEl = document.getElementById('checkoutModal');
-                bootstrap.Modal.getInstance(modalEl)?.hide();
-
-                showToast('Ordine creato con successo!', 'success');
-
-                // Close offcanvas if open
-                const cartEl = document.getElementById('cartOffcanvas');
-                const offcanvas = bootstrap.Offcanvas.getInstance(cartEl) || new bootstrap.Offcanvas(cartEl);
-                offcanvas.hide();
-
-                // Refresh state
-                await fetchCart();
-                showOrders();
-            } else if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('jwt_token');
-                updateAuthUI();
-                showToast('Sessione scaduta. Effettua di nuovo l\'accesso.', 'error');
-                showAuth('login');
+                const data = await response.json();
+                window.location.href = data.approvalUrl; // → redirect a PayPal
             } else {
-                const errMsg = await response.text();
-                showToast(`Errore: ${errMsg || 'Impossibile completare l\'ordine'}`, 'error');
+                showToast('Errore avvio pagamento PayPal', 'error');
+                if (btnText) btnText.classList.remove('d-none');
+                if (btnSpinner) btnSpinner.classList.add('d-none');
+                if (confirmBtn) confirmBtn.disabled = false;
             }
         } catch (err) {
-            showToast('Errore di connessione durante il checkout', 'error');
-        } finally {
+            showToast('Errore di connessione', 'error');
             if (btnText) btnText.classList.remove('d-none');
             if (btnSpinner) btnSpinner.classList.add('d-none');
             if (confirmBtn) confirmBtn.disabled = false;
@@ -1031,6 +1022,49 @@
         // Init UI
         updateAuthUI();
         showHome();
+
+        // Gestione ritorno da PayPal
+        const checkPaymentReturn = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const paymentStatus = params.get('payment');
+            if (!paymentStatus) return;
+
+            // Pulisce i parametri dall'URL senza ricaricare la pagina
+            window.history.replaceState({}, '', '/');
+
+            if (paymentStatus === 'success') {
+                const email = sessionStorage.getItem('checkout_email');
+                sessionStorage.removeItem('checkout_email');
+
+                if (email && localStorage.getItem('jwt_token')) {
+                    try {
+                        const response = await fetch(
+                            `/api/orders?indirizzo=${encodeURIComponent(email)}`,
+                            { method: 'POST', headers: getAuthHeaders() }
+                        );
+                        if (response.ok) {
+                            showToast('Pagamento completato! Controlla la tua email.', 'success');
+                            await fetchCart();
+                            showOrders();
+                        } else {
+                            showToast('Pagamento ricevuto, ma errore nella creazione dell\'ordine', 'error');
+                        }
+                    } catch {
+                        showToast('Errore durante la creazione dell\'ordine', 'error');
+                    }
+                } else {
+                    showToast('Pagamento completato!', 'success');
+                }
+
+            } else if (paymentStatus === 'cancelled') {
+                showToast('Pagamento annullato', 'info');
+            } else if (paymentStatus === 'error') {
+                showToast('Pagamento fallito', 'error');
+            }
+        };
+
+        checkPaymentReturn();
+
     };
 
     document.addEventListener('DOMContentLoaded', initApp);

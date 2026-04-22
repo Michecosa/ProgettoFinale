@@ -2,7 +2,7 @@ spring:
   application:
     name: final_project
 
-  # Configurazione Email (Placeholder)
+  # Configurazione Email
   mail:
     host: smtp.gmail.com
     port: 587
@@ -19,7 +19,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/final_project?createDatabaseIfNotExist=true
     username: root
-    password:
+    password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   # Configurazione JPA / Hibernate
@@ -34,3 +34,13 @@ spring:
 jwt:
   secret: MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4 # Chiave da 256 bit codificata in Base64
   expiration: 86400000 # 1 giorno in millisecondi
+
+
+# Configurazione PayPal
+paypal:
+  client-id: AekV-sK2G6AnX4Mi7bTD0gEJcHEtfHr0MNIPCr6TJlJgHpni1HReE1Fn6cOjtX16yLOcNKQBswwy1uhK
+  client-secret: EIY2RuCrHwwIDDa44g4XIfJ58BP8cFXkOcoGifu_n85zJYLs4w0fWokWt_5THkv0ImLWHp5VdMluto1p
+  mode: sandbox
+  currency: EUR
+  return-url: http://localhost:8080/payment/success
+  cancel-url: http://localhost:8080/payment/cancel
