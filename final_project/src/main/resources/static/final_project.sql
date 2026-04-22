@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '9b022f3c-3cdb-11f1-88cc-881df782a2a7:1-221';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '9b022f3c-3cdb-11f1-88cc-881df782a2a7:1-225';
 
 --
 -- Table structure for table `carrello`
@@ -217,7 +217,7 @@ CREATE TABLE `utente` (
 
 LOCK TABLES `utente` WRITE;
 /*!40000 ALTER TABLE `utente` DISABLE KEYS */;
-INSERT INTO `utente` VALUES (1,'admin@codemarketplace.it','$2a$10$p2sh7ng/VNXWtd78aYVXP.tqRiaeaoeRece50NzYn4uYUo2S1zhBu','ROLE_ADMIN','admin'),(2,'mario@mail.it','$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uVs7.IEC.','ROLE_USER','mario'),(3,'giulia@mail.it','$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uVs7.IEC.','ROLE_USER','giulia'),(4,'luca@mail.it','$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uVs7.IEC.','ROLE_USER','luca'),(5,'donatomorra90@gmail.com','$2a$10$.CyHBmFoGgCuZZjsTSR.2.LoSfsyKd8CJFVJoWMxD6saCVrNRc8dO','ROLE_ADMIN','donato'),(6,'mick@mick.mick','$2a$10$wsUkT/z2mLu2u.Uh6RcoCey.rxRtU3eR6rV9lAWrrZhKKzUt1MoC2','ROLE_USER','mick_'),(7,'mich@gmail.com','$2a$10$ax5LoKNcgorZrPzL/yHyZ.Lda/Ssg2Dn0d/uC/c.8/dpR26heuJhy','ROLE_ADMIN','miche'),(8,'miche@example.com','$2a$10$ax5LoKNcgorZrPzL/yHyZ.Lda/Ssg2Dn0d/uC/c.8/dpR26heuJhy',NULL,'michela');
+INSERT INTO `utente` VALUES (1,'admin@codemarketplace.it','$2a$10$ax5LoKNcgorZrPzL/yHyZ.Lda/Ssg2Dn0d/uC/c.8/dpR26heuJhy','ROLE_ADMIN','admin'),(2,'mario@mail.it','$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uVs7.IEC.','ROLE_USER','mario'),(3,'giulia@mail.it','$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uVs7.IEC.','ROLE_USER','giulia'),(4,'luca@mail.it','$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uVs7.IEC.','ROLE_USER','luca'),(5,'donatomorra90@gmail.com','$2a$10$.CyHBmFoGgCuZZjsTSR.2.LoSfsyKd8CJFVJoWMxD6saCVrNRc8dO','ROLE_ADMIN','donato'),(6,'mick@mick.mick','$2a$10$wsUkT/z2mLu2u.Uh6RcoCey.rxRtU3eR6rV9lAWrrZhKKzUt1MoC2','ROLE_USER','mick_'),(7,'micheladellagatta1@gmail.com','$2a$10$ax5LoKNcgorZrPzL/yHyZ.Lda/Ssg2Dn0d/uC/c.8/dpR26heuJhy','ROLE_ADMIN','miche'),(8,'miche@example.com','$2a$10$ax5LoKNcgorZrPzL/yHyZ.Lda/Ssg2Dn0d/uC/c.8/dpR26heuJhy',NULL,'michela');
 /*!40000 ALTER TABLE `utente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,7 +235,7 @@ CREATE TABLE `utente_ruolo` (
   PRIMARY KEY (`id`),
   KEY `FKjjcwv1trgn2xeg7h4fa0sp7yw` (`id_utente`),
   CONSTRAINT `FKjjcwv1trgn2xeg7h4fa0sp7yw` FOREIGN KEY (`id_utente`) REFERENCES `utente` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +244,7 @@ CREATE TABLE `utente_ruolo` (
 
 LOCK TABLES `utente_ruolo` WRITE;
 /*!40000 ALTER TABLE `utente_ruolo` DISABLE KEYS */;
-INSERT INTO `utente_ruolo` VALUES (1,'ROLE_USER',6),(2,'ROLE_USER',7),(3,'ROLE_USER',8);
+INSERT INTO `utente_ruolo` VALUES (1,'ROLE_USER',6),(2,'ROLE_USER',7),(3,'ROLE_USER',8),(4,'ROLE_ADMIN',1),(5,'ROLE_ADMIN',7);
 /*!40000 ALTER TABLE `utente_ruolo` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -258,4 +258,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-22 12:12:42
+-- Dump completed on 2026-04-22 14:46:33
