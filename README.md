@@ -76,7 +76,7 @@ Il progetto implementa diversi pattern architetturali per garantire scalabilità
 ProgettoFinale/
 ├── final_project/
 │   ├── src/main/java/com/example/final_project/
-│   │   ├── Config/          # Configurazioni (Security, PayPal, Mail)
+│   │   ├── Config/          # Configurazioni (PayPal)
 │   │   ├── Controller/      # Endpoint REST API
 │   │   ├── Model/           # Entità JPA (User, Product, Order, etc.)
 │   │   ├── Repository/      # Interfacce Spring Data JPA
@@ -111,10 +111,11 @@ CREATE DATABASE final_project;
 ```
 
 ### Step 3: Configurazione Ambiente
-Modifica il file `src/main/resources/application.yaml` inserendo le tue credenziali:
-- Database (Username/Password)
-- SMTP Email (Gmail App Password)
-- PayPal Client ID & Secret
+Copia il file `.env.example` in un nuovo file chiamato `.env` e inserisci le tue credenziali (Database, Email SMTP, PayPal). 
+È importante sapere che il progetto utilizza due file `.env` per diversi scopi:
+
+*   **`.env` nella cartella principale (`ProgettoFinale/`)**: Viene utilizzato da **Docker Compose**. Quando lanci `docker-compose up`, Docker cerca questo file per configurare il database e l'applicazione nei container.
+*   **`.env` dentro la cartella `final_project/`**: Viene utilizzato per l'**avvio locale** (tramite IntelliJ, VS Code o `./mvnw spring-boot:run`). Spring Boot carica automaticamente questo file per risolvere le variabili definite in `application.yaml`.
 
 ### Step 4: Build e Avvio
 ```bash
@@ -136,7 +137,21 @@ paypal:
   client-secret: YOUR_CLIENT_SECRET
   mode: sandbox
 ```
+### Variabili d'Ambiente (.env)
+Il progetto utilizza il file `.env` per separare i segreti dal codice. Assicurati che le seguenti chiavi siano configurate:
 
+| Variabile | Descrizione |
+| :--- | :--- |
+| `DB_URL` | URL di connessione al database MySQL |
+| `DB_USERNAME` | Username del database |
+| `DB_PASSWORD` | Password del database |
+| `MAIL_USERNAME` | Email per l'invio delle notifiche |
+| `MAIL_PASSWORD` | App Password (per Gmail) o password SMTP |
+| `JWT_SECRET` | Chiave segreta per la firma dei token (Base64) |
+| `JWT_EXPIRATION` | Durata del token in millisecondi |
+| `PAYPAL_CLIENT_ID` | Client ID ottenuto dalla dashboard PayPal |
+| `PAYPAL_CLIENT_SECRET` | Secret ottenuto dalla dashboard PayPal |
+| `PAYPAL_MODE` | `sandbox` per test o `live` per produzione |
 ---
 
 <a name="team-di-sviluppo"></a>

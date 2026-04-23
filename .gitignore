@@ -1,0 +1,22 @@
+# Security
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Java / Spring Boot
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Docker
+.docker/

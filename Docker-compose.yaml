@@ -1,0 +1,50 @@
+services:
+  # STEP 1: IL DATABASE (MySQL)
+  db-final-project:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      # Allineato all'application.yml
+      MYSQL_DATABASE: final_project
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      # Verifica che il DB sia pronto prima di far partire Spring
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - security_net
+
+  # STEP 2: L'APPLICAZIONE (Spring Boot)
+  app-security:
+    build: .
+    container_name: spring_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      db-final-project:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # --- OVERRIDE DELLE PROPERTIES ---
+      # In Docker usiamo l'hostname del servizio database
+      - DB_URL=jdbc:mysql://db-final-project:3306/final_project?createDatabaseIfNotExist=true
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET}
+      - PAYPAL_MODE=${PAYPAL_MODE}
+    networks:
+      - security_net
+
+networks:
+  security_net:
+    driver: bridge

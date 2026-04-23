@@ -1,13 +1,15 @@
 spring:
   application:
     name: final_project
+  config:
+    import: optional:file:.env[.properties]
 
   # Configurazione Email
   mail:
     host: smtp.gmail.com
     port: 587
-    username: "codeshop645@gmail.com"
-    password: "rawk yzli wwnj dtkb"
+    username: "${MAIL_USERNAME}"
+    password: "${MAIL_PASSWORD}"
     properties:
       mail:
         smtp:
@@ -17,9 +19,9 @@ spring:
 
   # Configurazione Database
   datasource:
-    url: jdbc:mysql://localhost:3306/final_project?createDatabaseIfNotExist=true
-    username: root
-    password: password
+    url: "${DB_URL}"
+    username: "${DB_USERNAME}"
+    password: "${DB_PASSWORD}"
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   # Configurazione JPA / Hibernate
@@ -32,15 +34,15 @@ spring:
 
 # Configurazione JWT (Proprietà Custom)
 jwt:
-  secret: MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4 # Chiave da 256 bit codificata in Base64
-  expiration: 86400000 # 1 giorno in millisecondi
+  secret: "${JWT_SECRET}"
+  expiration: "${JWT_EXPIRATION}"
 
 
 # Configurazione PayPal
 paypal:
-  client-id: AekV-sK2G6AnX4Mi7bTD0gEJcHEtfHr0MNIPCr6TJlJgHpni1HReE1Fn6cOjtX16yLOcNKQBswwy1uhK
-  client-secret: EIY2RuCrHwwIDDa44g4XIfJ58BP8cFXkOcoGifu_n85zJYLs4w0fWokWt_5THkv0ImLWHp5VdMluto1p
-  mode: sandbox
+  client-id: "${PAYPAL_CLIENT_ID}"
+  client-secret: "${PAYPAL_CLIENT_SECRET}"
+  mode: "${PAYPAL_MODE}"
   currency: EUR
   return-url: http://localhost:8080/payment/success
   cancel-url: http://localhost:8080/payment/cancel
