@@ -4,9 +4,9 @@ services:
     image: mysql:8.0
     container_name: mysql_db
     environment:
-      # Allineato all'application.yml
       MYSQL_DATABASE: final_project
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     healthcheck:
       # Verifica che il DB sia pronto prima di far partire Spring
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
