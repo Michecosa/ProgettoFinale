@@ -1,7 +1,13 @@
 -- Script di inizializzazione dati per Docker
 -- Eseguire DOPO `docker compose up -d` (le tabelle vengono create da Hibernate al primo avvio)
 --
--- Comando: docker exec -i mysql_db mysql -uroot -p<DB_PASSWORD> final_project < init-data.sql
+-- Mac/Linux:
+--   docker exec -i mysql_db mysql -uroot final_project < init-data.sql
+--   (con password: docker exec -i mysql_db mysql -uroot -pTUAPASSWORD final_project < init-data.sql)
+--
+-- Windows PowerShell:
+--   Get-Content init-data.sql | docker exec -i mysql_db mysql -uroot final_project
+--   (con password: Get-Content init-data.sql | docker exec -i mysql_db mysql -uroot -pTUAPASSWORD final_project)
 --
 -- Utente admin di default creato da questo script:
 --   username : admin
